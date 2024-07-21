@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common'
 import Transaction from './interfaces/transaction.interface'
-import { randomUUID } from 'crypto'
-import { AddTransactionDTO } from './dto/addTransactionDTO'
 
 @Injectable()
 export class TransactionService {
@@ -38,18 +36,33 @@ export class TransactionService {
       category: 'cabeleireiro',
       date: new Date(),
     },
+    {
+      userId: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
+      transactionId: 'bad008ac-0d70-4ec3-9897-76f140f38131',
+      transactionValue: 5000,
+      transactionType: 'income',
+      category: null,
+      date: new Date(),
+    },
   ]
 
   getAllTransactions(): Transaction[] {
     return this.tansactions
   }
 
-  async addExpanse(newTransaction: AddTransactionDTO) {
-    const transaction: Transaction = {
-      transactionId: randomUUID(),
-      transactionType: 'expense',
-      ...newTransaction,
-    }
-    this.tansactions.push(transaction)
+  getTransactionTypeThisMonth(type: 'income' | 'expense'): number {
+    const typeThisMonth = this.tansactions.filter((item) => {
+      return (
+        item.transactionType === type &&
+        item.date.getMonth === new Date().getMonth
+      )
+    })
+
+    let totalValue = 0
+    typeThisMonth.forEach((item) => {
+      totalValue += item.transactionValue
+    })
+
+    return totalValue
   }
 }

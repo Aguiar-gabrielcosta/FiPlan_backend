@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common'
+import { Controller, Get } from '@nestjs/common'
 import { TransactionService } from './transaction.service'
 import Transaction from './interfaces/transaction.interface'
-import { AddTransactionDTO } from './dto/addTransactionDTO'
+import { MonthlyBalanceDTO } from './dto/monthlyBalanceDTO'
 
 @Controller('transactions')
 export class TransactionController {
@@ -12,9 +12,13 @@ export class TransactionController {
     return this.transactionService.getAllTransactions()
   }
 
-  @Post()
-  async addTransaction(@Body() addTransactionDTO: AddTransactionDTO) {
-    await this.transactionService.addExpanse(addTransactionDTO)
-    return 'Transação efetivada'
+  @Get('balance')
+  getMonthlyBalance(): MonthlyBalanceDTO {
+    return {
+      monthExpense:
+        this.transactionService.getTransactionTypeThisMonth('expense'),
+      monthIncome:
+        this.transactionService.getTransactionTypeThisMonth('income'),
+    }
   }
 }

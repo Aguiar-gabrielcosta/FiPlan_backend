@@ -6,5 +6,6 @@ import { TransactionController } from './transaction.controller'
   imports: [],
   controllers: [TransactionController],
   providers: [TransactionService],
+  exports: [TransactionService],
 })
 export class TransactionModule {}
