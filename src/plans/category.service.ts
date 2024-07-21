@@ -26,7 +26,7 @@ export class CategoryService {
     },
   ]
 
-  getAllCategories(): Category[] {
+  getAllCategoriesData(): Category[] {
     return this.categories
   }
 }

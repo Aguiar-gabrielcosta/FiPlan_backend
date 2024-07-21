@@ -1,8 +1,8 @@
 import { Controller, Get } from '@nestjs/common'
 import { BudgetService } from './budget.service'
-import Budget from './interfaces/budget.interface'
 import Category from './interfaces/category.interface'
 import { CategoryService } from './category.service'
+import { GetPlansDTO } from './dto/getPlansDTO'
 
 @Controller('plans')
 export class PlansController {
@@ -11,13 +11,13 @@ export class PlansController {
     private categoryService: CategoryService,
   ) {}
 
-  @Get('budgets')
-  getBudgets(): Budget[] {
-    return this.budgetService.getAllBudgets()
+  @Get()
+  getPlans(): GetPlansDTO[] {
+    return this.budgetService.getPlans()
   }
 
   @Get('categories')
   getCategories(): Category[] {
-    return this.categoryService.getAllCategories()
+    return this.categoryService.getAllCategoriesData()
   }
 }
