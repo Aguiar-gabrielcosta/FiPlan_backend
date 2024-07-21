@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common'
 import { PlansController } from './plans.controller'
 import { BudgetService } from './budget.service'
 import { CategoryService } from './category.service'
+import { DataBaseModule } from 'src/database/database.module'
 
 @Module({
-  imports: [],
+  imports: [DataBaseModule],
   controllers: [PlansController],
   providers: [BudgetService, CategoryService],
   exports: [],

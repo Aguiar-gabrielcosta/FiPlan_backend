@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common'
 import { TransactionService } from './transaction.service'
-import Transaction from './interfaces/transaction.interface'
 import { MonthlyBalanceDTO } from './dto/monthlyBalanceDTO'
+import Transaction from 'src/database/interfaces/transaction.interface'
 
 @Controller('transactions')
 export class TransactionController {
@@ -9,7 +9,7 @@ export class TransactionController {
 
   @Get()
   findAll(): Transaction[] {
-    return this.transactionService.getAllTransactions()
+    return this.transactionService.getAllTransactionData()
   }
 
   @Get('balance')

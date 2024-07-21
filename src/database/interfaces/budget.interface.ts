@@ -1,8 +1,6 @@
-import { UUID } from 'crypto'
-
 export default interface Budget {
-  budgetId: UUID
-  userId: UUID
+  budgetId: string
+  userId: string
   budgetValue: number
   startDate: Date
   endDate: Date

@@ -1,8 +1,6 @@
-import { UUID } from 'crypto'
-
 export default interface Transaction {
-  transactionId: UUID
-  userId: UUID
+  transactionId: string
+  userId: string
   category: string | null
   transactionType: 'expense' | 'income'
   transactionValue: number
