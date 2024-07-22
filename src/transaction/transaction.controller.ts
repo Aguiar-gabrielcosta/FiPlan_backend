@@ -15,10 +15,8 @@ export class TransactionController {
   @Get('balance')
   getMonthlyBalance(): MonthlyBalanceDTO {
     return {
-      monthExpense:
-        this.transactionService.getTransactionTypeThisMonth('expense'),
-      monthIncome:
-        this.transactionService.getTransactionTypeThisMonth('income'),
+      monthExpense: this.transactionService.monthlyExpense(),
+      monthIncome: this.transactionService.monthlyIncome(),
     }
   }
 }
