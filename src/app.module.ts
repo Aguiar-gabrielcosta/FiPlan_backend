@@ -3,7 +3,7 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { TransactionModule } from './transaction/transaction.module'
 import { ConfigModule } from '@nestjs/config'
-import { PlansModule } from './plans/plans.module'
+// import { PlansModule } from './plans/plans.module'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { UserModule } from './user/user.module'
 
@@ -22,7 +22,7 @@ import { UserModule } from './user/user.module'
       autoLoadEntities: true,
     }),
     TransactionModule,
-    PlansModule,
+    // PlansModule,
     UserModule,
   ],
   controllers: [AppController],

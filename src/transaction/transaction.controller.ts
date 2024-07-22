@@ -1,22 +1,26 @@
-import { Controller, Get } from '@nestjs/common'
+import { Body, Controller, Get, Post } from '@nestjs/common'
 import { TransactionService } from './transaction.service'
-import { MonthlyBalanceDTO } from './dto/monthlyBalanceDTO'
-import Transaction from 'src/database/interfaces/transaction.interface'
+import { AddTransactionDTO } from './dto/addTransactionDTO'
 
-@Controller('transactions')
+@Controller('transaction')
 export class TransactionController {
   constructor(private transactionService: TransactionService) {}
 
   @Get()
-  findAll(): Transaction[] {
-    return this.transactionService.getAllTransactionData()
+  findAll() {
+    return this.transactionService.getAllTransactions()
   }
 
   @Get('balance')
-  getMonthlyBalance(): MonthlyBalanceDTO {
+  getMonthlyBalance() {
     return {
       monthExpense: this.transactionService.monthlyExpense(),
       monthIncome: this.transactionService.monthlyIncome(),
     }
+  }
+
+  @Post()
+  addTransaction(@Body() addTransactionDTO: AddTransactionDTO) {
+    return this.transactionService.addTransaction(addTransactionDTO)
   }
 }
