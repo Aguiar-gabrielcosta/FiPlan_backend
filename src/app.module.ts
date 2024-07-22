@@ -3,9 +3,9 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { TransactionModule } from './transaction/transaction.module'
 import { ConfigModule } from '@nestjs/config'
-// import { PlansModule } from './plans/plans.module'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { UserModule } from './user/user.module'
+import { PlanModule } from './plan/plan.module'
 
 @Module({
   imports: [
@@ -22,8 +22,8 @@ import { UserModule } from './user/user.module'
       autoLoadEntities: true,
     }),
     TransactionModule,
-    // PlansModule,
     UserModule,
+    PlanModule,
   ],
   controllers: [AppController],
   providers: [AppService],
