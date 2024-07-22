@@ -8,6 +8,6 @@ export class Category {
   @Column({ type: 'uuid' })
   plan_id: string
 
-  @Column({ type: 'money' })
+  @Column({ type: 'numeric' })
   category_budget: number
 }

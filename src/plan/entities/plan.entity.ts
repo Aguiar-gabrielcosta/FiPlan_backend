@@ -15,7 +15,7 @@ export class Plan {
   })
   user_id: string
 
-  @Column({ type: 'money' })
+  @Column({ type: 'numeric' })
   budget_value: number
 
   @Column({ type: 'date' })

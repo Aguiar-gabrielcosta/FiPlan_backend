@@ -21,7 +21,7 @@ export class Transaction {
   @Column({ type: 'text', enum: ['expense', 'income'] })
   transaction_type: 'expense' | 'income'
 
-  @Column({ type: 'money' })
+  @Column({ type: 'numeric' })
   transaction_value: number
 
   @Column({ type: 'date' })
