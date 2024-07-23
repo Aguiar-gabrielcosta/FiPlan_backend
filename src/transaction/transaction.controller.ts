@@ -15,27 +15,22 @@ import { UpdateTransactionDTO } from './dto/updateTransactionDTO'
 export class TransactionController {
   constructor(private transactionService: TransactionService) {}
 
-  @Get('balance')
-  getMonthlyBalance() {
-    return this.transactionService.monthlyBalance()
-  }
-
-  @Get()
-  findAll() {
-    return this.transactionService.getAllTransactions()
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.transactionService.getTransactionById(id)
-  }
-
-  @Post()
+  @Post('data')
   create(@Body() addTransactionDTO: AddTransactionDTO) {
     return this.transactionService.addTransaction(addTransactionDTO)
   }
 
-  @Patch(':id')
+  @Get('data')
+  findAll() {
+    return this.transactionService.getAllTransactions()
+  }
+
+  @Get('data/:id')
+  findOne(@Param('id') id: string) {
+    return this.transactionService.getTransactionById(id)
+  }
+
+  @Patch('data/:id')
   update(
     @Param('id') id: string,
     @Body() updateTransactionDTO: UpdateTransactionDTO,
@@ -43,8 +38,13 @@ export class TransactionController {
     return this.transactionService.updateTransaction(id, updateTransactionDTO)
   }
 
-  @Delete(':id')
+  @Delete('data/:id')
   delete(@Param('id') id: string) {
     return this.transactionService.deleteTransaction(id)
+  }
+
+  @Get(':id/balance')
+  getMonthlyBalance(@Param('id') id: string) {
+    return this.transactionService.monthlyBalance(id)
   }
 }

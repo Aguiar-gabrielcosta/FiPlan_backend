@@ -52,10 +52,13 @@ export class TransactionService {
 
   // Filtra as transações por receita/gasto e dentro do intervalo de tempo
   async getTransactions(
+    user_id: string,
     type?: 'income' | 'expense',
-    timeFrame?: { startDate: Date; endDate: Date },
+    timeFrame?: { start_date: Date; end_date: Date },
   ): Promise<Transaction[]> {
-    let transactions = await this.transactionRepository.find()
+    let transactions = await this.transactionRepository.find({
+      where: { user_id },
+    })
 
     if (type) {
       transactions = transactions.filter((item) => {
@@ -66,10 +69,12 @@ export class TransactionService {
     if (timeFrame) {
       transactions = transactions.filter((item) => {
         const date = new Date(item.transaction_date)
+        const start_date = new Date(timeFrame.start_date)
+        const end_date = new Date(timeFrame.end_date)
 
         return (
-          date.getTime() >= timeFrame.startDate.getTime() &&
-          date.getTime() <= timeFrame.endDate.getTime()
+          date.getTime() >= start_date.getTime() &&
+          date.getTime() <= end_date.getTime()
         )
       })
     }
@@ -88,24 +93,24 @@ export class TransactionService {
   }
 
   // Função para retorno do balanço do mês
-  async monthlyBalance(): Promise<{
+  async monthlyBalance(user_id: string): Promise<{
     monthExpense: number
     monthIncome: number
   }> {
     const today = new Date()
     const year = today.getFullYear()
     const month = today.getMonth()
-    const startDate = new Date(year, month, 1)
-    const endDate = new Date(year, month + 1, 0)
+    const start_date = new Date(year, month, 1)
+    const end_date = new Date(year, month + 1, 0)
 
-    const expenses = await this.getTransactions('expense', {
-      startDate,
-      endDate,
+    const expenses = await this.getTransactions(user_id, 'expense', {
+      start_date,
+      end_date,
     })
 
-    const incomes = await this.getTransactions('income', {
-      startDate,
-      endDate,
+    const incomes = await this.getTransactions(user_id, 'income', {
+      start_date,
+      end_date,
     })
 
     return {

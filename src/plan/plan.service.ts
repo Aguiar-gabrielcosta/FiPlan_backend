@@ -43,4 +43,17 @@ export class PlanService {
   deletePlan(plan_id: string): Promise<{ affected?: number }> {
     return this.planRepository.delete({ plan_id })
   }
+
+  // Recupera todos os planos do usuário com user_id
+  getAllPlanOfUser(user_id: string): Promise<Plan[]> {
+    return this.planRepository.find({
+      select: {
+        plan_id: true,
+        budget_value: true,
+        start_date: true,
+        end_date: true,
+      },
+      where: { user_id },
+    })
+  }
 }

@@ -14,22 +14,22 @@ import { UpdateCategoryDTO } from './dto/updateCategory.dto'
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
-  @Post()
+  @Post('data')
   createCategory(@Body() addCategoryDTO: AddCategoryDTO) {
     return this.categoryService.addCategory(addCategoryDTO)
   }
 
-  @Get()
+  @Get('data')
   findAllCategories() {
     return this.categoryService.getAllCategories()
   }
 
-  @Get(':id')
+  @Get('data/:id')
   findOneCategory(@Param('id') id: string) {
     return this.categoryService.getOneCategory(id)
   }
 
-  @Patch(':id')
+  @Patch('data/:id')
   updateCategory(
     @Param('id') id: string,
     @Body() updateCategoryDTO: UpdateCategoryDTO,
@@ -37,7 +37,7 @@ export class CategoryController {
     return this.categoryService.updateCategory(id, updateCategoryDTO)
   }
 
-  @Delete(':id')
+  @Delete('data/:id')
   removeCategory(@Param('id') id: string) {
     return this.categoryService.deleteCategory(id)
   }
