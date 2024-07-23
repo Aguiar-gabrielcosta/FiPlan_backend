@@ -1,4 +1,4 @@
-import { IsDate, IsNotEmpty, IsNumber, IsUUID } from 'class-validator'
+import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator'
 
 export class AddPlanDTO {
   @IsNotEmpty()
@@ -8,9 +8,9 @@ export class AddPlanDTO {
   @IsNumber()
   budget_value: number
 
-  @IsDate()
-  start_date: Date
+  @IsString()
+  start_date: string
 
-  @IsDate()
-  end_date: Date
+  @IsString()
+  end_date: string
 }

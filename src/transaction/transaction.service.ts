@@ -25,7 +25,7 @@ export class TransactionService {
     const transaction = new Transaction()
     transaction.transaction_id = randomUUID()
     transaction.user_id = addTransactionDTO.user_id
-    transaction.category = addTransactionDTO.category
+    transaction.category_id = addTransactionDTO.category_id
     transaction.transaction_type = addTransactionDTO.transaction_type
     transaction.transaction_value = addTransactionDTO.transaction_value
     transaction.transaction_date = addTransactionDTO.transaction_date
@@ -43,18 +43,19 @@ export class TransactionService {
     const transaction = new Transaction()
     transaction.transaction_id = transaction_id
     transaction.user_id = updateTransactionDTO.user_id
-    transaction.category = updateTransactionDTO.category
+    transaction.category_id = updateTransactionDTO.category_id
     transaction.transaction_date = updateTransactionDTO.transaction_date
     transaction.transaction_type = updateTransactionDTO.transaction_type
     transaction.transaction_value = updateTransactionDTO.transaction_value
     return this.transactionRepository.save(transaction)
   }
 
-  // Filtra as transações por receita/gasto e dentro do intervalo de tempo
+  // Filtra as transações por receita/gasto, dentro do intervalo de tempo definido e da categoria desejada
   async getTransactions(
     user_id: string,
     type?: 'income' | 'expense',
-    timeFrame?: { start_date: Date; end_date: Date },
+    timeFrame?: { start_date: string; end_date: string },
+    category_id?: number,
   ): Promise<Transaction[]> {
     let transactions = await this.transactionRepository.find({
       where: { user_id },
@@ -79,6 +80,12 @@ export class TransactionService {
       })
     }
 
+    if (category_id) {
+      transactions = transactions.filter((item) => {
+        return item.category_id === category_id
+      })
+    }
+
     return transactions
   }
 
@@ -100,8 +107,8 @@ export class TransactionService {
     const today = new Date()
     const year = today.getFullYear()
     const month = today.getMonth()
-    const start_date = new Date(year, month, 1)
-    const end_date = new Date(year, month + 1, 0)
+    const start_date = new Date(year, month, 1).toISOString()
+    const end_date = new Date(year, month + 1, 0).toISOString()
 
     const expenses = await this.getTransactions(user_id, 'expense', {
       start_date,
@@ -118,4 +125,6 @@ export class TransactionService {
       monthIncome: this.getTotalValue(incomes),
     }
   }
+
+  // getExpensesPerCategory(user_id: string)
 }

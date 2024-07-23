@@ -25,20 +25,20 @@ export class CategoryController {
   }
 
   @Get('data/:id')
-  findOneCategory(@Param('id') id: string) {
+  findOneCategory(@Param('id') id: number) {
     return this.categoryService.getOneCategory(id)
   }
 
   @Patch('data/:id')
   updateCategory(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateCategoryDTO: UpdateCategoryDTO,
   ) {
     return this.categoryService.updateCategory(id, updateCategoryDTO)
   }
 
   @Delete('data/:id')
-  removeCategory(@Param('id') id: string) {
+  removeCategory(@Param('id') id: number) {
     return this.categoryService.deleteCategory(id)
   }
 }

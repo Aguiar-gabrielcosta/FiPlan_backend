@@ -1,3 +1,4 @@
+import { Category } from 'src/plan/entities/category.entity'
 import { User } from 'src/user/entities/user.entity'
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 
@@ -15,8 +16,14 @@ export class Transaction {
   })
   user_id: string
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
-  category: string | null
+  @Column({ type: 'integer' })
+  @ManyToOne(() => Category)
+  @JoinColumn({
+    name: 'category_id',
+    referencedColumnName: 'category_id',
+    foreignKeyConstraintName: 'fk_category_id',
+  })
+  category_id: number
 
   @Column({ type: 'text', enum: ['expense', 'income'] })
   transaction_type: 'expense' | 'income'
@@ -25,5 +32,5 @@ export class Transaction {
   transaction_value: number
 
   @Column({ type: 'date' })
-  transaction_date: Date
+  transaction_date: string
 }

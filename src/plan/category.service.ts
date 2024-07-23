@@ -24,22 +24,23 @@ export class CategoryService {
     return this.categoryRepository.find()
   }
 
-  getOneCategory(category: string): Promise<Category> {
-    return this.categoryRepository.findOneBy({ category })
+  getOneCategory(category_id: number): Promise<Category> {
+    return this.categoryRepository.findOneBy({ category_id })
   }
 
   updateCategory(
-    category: string,
+    category_id: number,
     updateCategoryDTO: UpdateCategoryDTO,
   ): Promise<Category> {
     const newCategory = new Category()
-    newCategory.category = category
+    newCategory.category_id = category_id
+    newCategory.category = updateCategoryDTO.category
     newCategory.plan_id = updateCategoryDTO.plan_id
     newCategory.category_budget = updateCategoryDTO.category_budget
     return this.categoryRepository.save(newCategory)
   }
 
-  deleteCategory(category: string): Promise<{ affected?: number }> {
-    return this.categoryRepository.delete({ category })
+  deleteCategory(category_id: number): Promise<{ affected?: number }> {
+    return this.categoryRepository.delete({ category_id })
   }
 }
