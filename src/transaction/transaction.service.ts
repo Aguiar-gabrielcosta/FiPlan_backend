@@ -110,21 +110,26 @@ export class TransactionService {
     const start_date = new Date(year, month, 1).toISOString()
     const end_date = new Date(year, month + 1, 0).toISOString()
 
-    const expenses = await this.getTransactions(user_id, 'expense', {
-      start_date,
-      end_date,
+    const data: { transaction_type: 'expense' | 'income'; sum: number }[] =
+      await this.transactionRepository.query(`
+        SELECT transaction_type, SUM(transaction_value) FROM "transaction"
+        WHERE user_id='${user_id}'
+        AND transaction_date BETWEEN '${start_date}' AND '${end_date}'
+        GROUP BY transaction_type;  
+      `)
+
+    const values = { monthExpense: 0, monthIncome: 0 }
+
+    data.map((item) => {
+      if (item.transaction_type === 'expense') {
+        values.monthExpense = item.sum
+      }
+
+      if (item.transaction_type === 'income') {
+        values.monthIncome = item.sum
+      }
     })
 
-    const incomes = await this.getTransactions(user_id, 'income', {
-      start_date,
-      end_date,
-    })
-
-    return {
-      monthExpense: this.getTotalValue(expenses),
-      monthIncome: this.getTotalValue(incomes),
-    }
+    return values
   }
-
-  // getExpensesPerCategory(user_id: string)
 }
