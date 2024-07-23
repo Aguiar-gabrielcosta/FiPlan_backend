@@ -87,6 +87,7 @@ export class TransactionService {
     return totalValue
   }
 
+  // Função para retorno do balanço do mês
   async monthlyBalance(): Promise<{
     monthExpense: number
     monthIncome: number
