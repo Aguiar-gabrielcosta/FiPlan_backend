@@ -10,18 +10,18 @@ import { UpdateTransactionDTO } from './dto/updateTransactionDTO'
 export class TransactionService {
   constructor(
     @InjectRepository(Transaction)
-    private readonly transactionRepository: Repository<Transaction>,
+    private transactionRepository: Repository<Transaction>,
   ) {}
 
   getAllTransactions(): Promise<Transaction[]> {
     return this.transactionRepository.find()
   }
 
-  getTransactionById(transaction_id: string) {
+  getTransactionById(transaction_id: string): Promise<Transaction> {
     return this.transactionRepository.findOneBy({ transaction_id })
   }
 
-  addTransaction(addTransactionDTO: AddTransactionDTO) {
+  addTransaction(addTransactionDTO: AddTransactionDTO): Promise<Transaction> {
     const transaction = new Transaction()
     transaction.transaction_id = randomUUID()
     transaction.user_id = addTransactionDTO.user_id
@@ -39,7 +39,7 @@ export class TransactionService {
   updateTransaction(
     transaction_id: string,
     updateTransactionDTO: UpdateTransactionDTO,
-  ) {
+  ): Promise<Transaction> {
     const transaction = new Transaction()
     transaction.transaction_id = transaction_id
     transaction.user_id = updateTransactionDTO.user_id
@@ -50,11 +50,12 @@ export class TransactionService {
     return this.transactionRepository.save(transaction)
   }
 
+  // Filtra as transações por receita/gasto e dentro do intervalo de tempo
   async getTransactions(
     type?: 'income' | 'expense',
     timeFrame?: { startDate: Date; endDate: Date },
   ): Promise<Transaction[]> {
-    let transactions = await this.getAllTransactions()
+    let transactions = await this.transactionRepository.find()
 
     if (type) {
       transactions = transactions.filter((item) => {
@@ -64,9 +65,11 @@ export class TransactionService {
 
     if (timeFrame) {
       transactions = transactions.filter((item) => {
+        const date = new Date(item.transaction_date)
+
         return (
-          item.transaction_date.getTime() >= timeFrame.startDate.getTime() &&
-          item.transaction_date.getTime() <= timeFrame.endDate.getTime()
+          date.getTime() >= timeFrame.startDate.getTime() &&
+          date.getTime() <= timeFrame.endDate.getTime()
         )
       })
     }
@@ -74,6 +77,7 @@ export class TransactionService {
     return transactions
   }
 
+  // Retorna a soma dos valores de uma lista de transações
   getTotalValue(transactions: Transaction[]): number {
     let totalValue = 0
     transactions.forEach((item) => {
@@ -83,31 +87,29 @@ export class TransactionService {
     return totalValue
   }
 
-  async monthlyExpense(): Promise<number> {
-    const startDate = new Date()
-    startDate.setDate(1)
-    const endDate = new Date()
-    endDate.setDate(30)
+  async monthlyBalance(): Promise<{
+    monthExpense: number
+    monthIncome: number
+  }> {
+    const today = new Date()
+    const year = today.getFullYear()
+    const month = today.getMonth()
+    const startDate = new Date(year, month, 1)
+    const endDate = new Date(year, month + 1, 0)
 
-    const transactions = await this.getTransactions('expense', {
+    const expenses = await this.getTransactions('expense', {
       startDate,
       endDate,
     })
 
-    return this.getTotalValue(transactions)
-  }
-
-  async monthlyIncome(): Promise<number> {
-    const startDate = new Date()
-    startDate.setDate(1)
-    const endDate = new Date()
-    endDate.setDate(30)
-
-    const transactions = await this.getTransactions('income', {
+    const incomes = await this.getTransactions('income', {
       startDate,
       endDate,
     })
 
-    return this.getTotalValue(transactions)
+    return {
+      monthExpense: this.getTotalValue(expenses),
+      monthIncome: this.getTotalValue(incomes),
+    }
   }
 }

@@ -6,10 +6,16 @@ import { ConfigModule } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { UserModule } from './user/user.module'
 import { PlanModule } from './plan/plan.module'
+import { types } from 'pg'
+
+// Parsing para o tipo NUMERIC
+types.setTypeParser(1700, (val: string) => parseFloat(val))
 
 @Module({
   imports: [
+    // Configuração com .env
     ConfigModule.forRoot(),
+    // Banco de dados
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,

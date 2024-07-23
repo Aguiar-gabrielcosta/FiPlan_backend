@@ -15,6 +15,11 @@ import { UpdateTransactionDTO } from './dto/updateTransactionDTO'
 export class TransactionController {
   constructor(private transactionService: TransactionService) {}
 
+  @Get('balance')
+  getMonthlyBalance() {
+    return this.transactionService.monthlyBalance()
+  }
+
   @Get()
   findAll() {
     return this.transactionService.getAllTransactions()
@@ -41,13 +46,5 @@ export class TransactionController {
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.transactionService.deleteTransaction(id)
-  }
-
-  @Get('balance')
-  getMonthlyBalance() {
-    return {
-      monthExpense: this.transactionService.monthlyExpense(),
-      monthIncome: this.transactionService.monthlyIncome(),
-    }
   }
 }
