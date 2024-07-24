@@ -8,8 +8,9 @@ import {
   Post,
 } from '@nestjs/common'
 import { TransactionService } from './transaction.service'
-import { AddTransactionDTO } from './dto/addTransactionDTO'
-import { UpdateTransactionDTO } from './dto/updateTransactionDTO'
+import { AddTransactionDTO } from './dto/addTransaction.dto'
+import { UpdateTransactionDTO } from './dto/updateTransaction.dto'
+import { UserPlanDTO } from './dto/userPlan.dto'
 
 @Controller('transaction')
 export class TransactionController {
@@ -41,6 +42,11 @@ export class TransactionController {
   @Delete('data/:id')
   delete(@Param('id') id: string) {
     return this.transactionService.deleteTransaction(id)
+  }
+
+  @Get('expenses/category')
+  getExpensesPerCategory(@Body() userPlanDTO: UserPlanDTO) {
+    return this.transactionService.getExpensesPerCategory(userPlanDTO)
   }
 
   @Get(':id/balance')

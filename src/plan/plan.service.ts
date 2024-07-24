@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Plan } from './entities/plan.entity'
 import { Repository } from 'typeorm'
 import { randomUUID } from 'crypto'
-import { PlanProgressDTO } from './dto/planProgress.dto'
+import { PlanProgressDTO } from './dto/userPlan.dto'
 
 @Injectable()
 export class PlanService {

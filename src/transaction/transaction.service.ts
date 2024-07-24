@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Transaction } from './entities/transaction.entity'
 import { Repository } from 'typeorm'
-import { AddTransactionDTO } from './dto/addTransactionDTO'
+import { AddTransactionDTO } from './dto/addTransaction.dto'
 import { randomUUID } from 'crypto'
-import { UpdateTransactionDTO } from './dto/updateTransactionDTO'
+import { UpdateTransactionDTO } from './dto/updateTransaction.dto'
+import { UserPlanDTO } from './dto/userPlan.dto'
 
 @Injectable()
 export class TransactionService {
@@ -50,45 +51,6 @@ export class TransactionService {
     return this.transactionRepository.save(transaction)
   }
 
-  // Filtra as transações por receita/gasto, dentro do intervalo de tempo definido e da categoria desejada
-  async getTransactions(
-    user_id: string,
-    type?: 'income' | 'expense',
-    timeFrame?: { start_date: string; end_date: string },
-    category_id?: number,
-  ): Promise<Transaction[]> {
-    let transactions = await this.transactionRepository.find({
-      where: { user_id },
-    })
-
-    if (type) {
-      transactions = transactions.filter((item) => {
-        return item.transaction_type === type
-      })
-    }
-
-    if (timeFrame) {
-      transactions = transactions.filter((item) => {
-        const date = new Date(item.transaction_date)
-        const start_date = new Date(timeFrame.start_date)
-        const end_date = new Date(timeFrame.end_date)
-
-        return (
-          date.getTime() >= start_date.getTime() &&
-          date.getTime() <= end_date.getTime()
-        )
-      })
-    }
-
-    if (category_id) {
-      transactions = transactions.filter((item) => {
-        return item.category_id === category_id
-      })
-    }
-
-    return transactions
-  }
-
   // Retorna a soma dos valores de uma lista de transações
   getTotalValue(transactions: Transaction[]): number {
     let totalValue = 0
@@ -131,5 +93,35 @@ export class TransactionService {
     })
 
     return values
+  }
+
+  // Função para relação category/despesa de um plano
+  async getExpensesPerCategory(userPlanDTO: UserPlanDTO): Promise<
+    {
+      expenses: number
+      category: string
+      category_budget: string
+      progress: number
+    }[]
+  > {
+    const data = await this.transactionRepository.query(`
+        SELECT category.category, SUM("transaction".transaction_value) AS expenses, category.category_budget FROM "transaction"
+        FULL JOIN category ON "transaction".category_id = category.category_id
+        WHERE "transaction".user_id = '${userPlanDTO.user_id}' 
+        AND category.plan_id = '${userPlanDTO.plan_id}'
+        AND "transaction".transaction_type = 'expense'
+        GROUP BY category.category_id;
+      `)
+
+    const expensesPerCategory = data.map((item) => {
+      return {
+        progress: parseFloat((item.expenses / item.category_budget).toFixed(2)),
+        ...item,
+      }
+    })
+
+    console.log(expensesPerCategory)
+
+    return expensesPerCategory
   }
 }

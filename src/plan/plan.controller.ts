@@ -10,7 +10,7 @@ import {
 import { PlanService } from './plan.service'
 import { AddPlanDTO } from './dto/addPlan.dto'
 import { UpdatePlanDTO } from './dto/updatePlan.dto'
-import { PlanProgressDTO } from './dto/planProgress.dto'
+import { PlanProgressDTO } from './dto/userPlan.dto'
 import { TransactionService } from 'src/transaction/transaction.service'
 
 @Controller('plan')
