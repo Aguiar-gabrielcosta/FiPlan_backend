@@ -48,26 +48,8 @@ export class PlanController {
   // Recupera as informações de um plano do usuário
   // (orçamento, gastos no período, inicio e fim do plano e a porcentagem gasta)
   @Get('progress')
-  async getPlanProgress(@Body() planProgressDTO: PlanProgressDTO) {
-    const plan = await this.planService.getOnePlan(planProgressDTO.plan_id)
-    const budget_value = plan.budget_value
-    const start_date = plan.start_date
-    const end_date = plan.end_date
-    const userExpensesList = await this.transactionService.getTransactions(
-      planProgressDTO.user_id,
-      'expense',
-      { start_date, end_date },
-    )
-    const expenses = this.transactionService.getTotalValue(userExpensesList)
-    const progress = (expenses / plan.budget_value).toFixed(2)
-
-    return {
-      budget_value,
-      expenses,
-      start_date,
-      end_date,
-      progress,
-    }
+  getPlanProgress(@Body() planProgressDTO: PlanProgressDTO) {
+    return this.planService.getPlanProgress(planProgressDTO)
   }
 
   @Get(':id')
