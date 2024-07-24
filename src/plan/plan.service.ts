@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Plan } from './entities/plan.entity'
 import { Repository } from 'typeorm'
 import { randomUUID } from 'crypto'
-import { PlanProgressDTO } from './dto/userPlan.dto'
 
 @Injectable()
 export class PlanService {
@@ -59,7 +58,10 @@ export class PlanService {
   }
 
   // Retira o andamento do plano, obtendo o budget e os gastos relativos a esse plano além das datas de inicio e fim.
-  async getPlanProgress(planProgressDTO: PlanProgressDTO): Promise<{
+  async getPlanProgress(
+    user_id: string,
+    plan_id: string,
+  ): Promise<{
     budget_value: number
     start_date: string
     end_date: string
@@ -70,8 +72,8 @@ export class PlanService {
         SELECT plan.budget_value, plan.start_date, plan.end_date, SUM("transaction".transaction_value) AS total_expenses FROM plan
         INNER JOIN category ON plan.plan_id = category.plan_id
         INNER JOIN "transaction" ON category.category_id = "transaction".category_id
-        WHERE plan.user_id='${planProgressDTO.user_id}'
-        AND plan.plan_id='${planProgressDTO.plan_id}'
+        WHERE plan.user_id='${user_id}'
+        AND plan.plan_id='${plan_id}'
         AND transaction.transaction_type = 'expense'
         GROUP BY plan.plan_id;
       `)

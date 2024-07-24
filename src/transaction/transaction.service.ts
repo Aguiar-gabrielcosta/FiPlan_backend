@@ -5,7 +5,6 @@ import { Repository } from 'typeorm'
 import { AddTransactionDTO } from './dto/addTransaction.dto'
 import { randomUUID } from 'crypto'
 import { UpdateTransactionDTO } from './dto/updateTransaction.dto'
-import { UserPlanDTO } from './dto/userPlan.dto'
 
 @Injectable()
 export class TransactionService {
@@ -96,7 +95,10 @@ export class TransactionService {
   }
 
   // Função para relação category/despesa de um plano
-  async getExpensesPerCategory(userPlanDTO: UserPlanDTO): Promise<
+  async getExpensesPerCategory(
+    user_id: string,
+    plan_id: string,
+  ): Promise<
     {
       expenses: number
       category: string
@@ -107,8 +109,8 @@ export class TransactionService {
     const data = await this.transactionRepository.query(`
         SELECT category.category, SUM("transaction".transaction_value) AS expenses, category.category_budget FROM "transaction"
         FULL JOIN category ON "transaction".category_id = category.category_id
-        WHERE "transaction".user_id = '${userPlanDTO.user_id}' 
-        AND category.plan_id = '${userPlanDTO.plan_id}'
+        WHERE "transaction".user_id = '${user_id}' 
+        AND category.plan_id = '${plan_id}'
         AND "transaction".transaction_type = 'expense'
         GROUP BY category.category_id;
       `)
@@ -119,8 +121,6 @@ export class TransactionService {
         ...item,
       }
     })
-
-    console.log(expensesPerCategory)
 
     return expensesPerCategory
   }

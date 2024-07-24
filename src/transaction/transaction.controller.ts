@@ -10,7 +10,6 @@ import {
 import { TransactionService } from './transaction.service'
 import { AddTransactionDTO } from './dto/addTransaction.dto'
 import { UpdateTransactionDTO } from './dto/updateTransaction.dto'
-import { UserPlanDTO } from './dto/userPlan.dto'
 
 @Controller('transaction')
 export class TransactionController {
@@ -44,12 +43,15 @@ export class TransactionController {
     return this.transactionService.deleteTransaction(id)
   }
 
-  @Get('expenses/category')
-  getExpensesPerCategory(@Body() userPlanDTO: UserPlanDTO) {
-    return this.transactionService.getExpensesPerCategory(userPlanDTO)
+  @Get('expenses/category/:userid/:planid')
+  getExpensesPerCategory(
+    @Param('userid') user_id: string,
+    @Param('planid') plan_id: string,
+  ) {
+    return this.transactionService.getExpensesPerCategory(user_id, plan_id)
   }
 
-  @Get(':id/balance')
+  @Get('balance/:id')
   getMonthlyBalance(@Param('id') id: string) {
     return this.transactionService.monthlyBalance(id)
   }

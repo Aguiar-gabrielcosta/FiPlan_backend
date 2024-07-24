@@ -10,7 +10,6 @@ import {
 import { PlanService } from './plan.service'
 import { AddPlanDTO } from './dto/addPlan.dto'
 import { UpdatePlanDTO } from './dto/updatePlan.dto'
-import { PlanProgressDTO } from './dto/userPlan.dto'
 import { TransactionService } from 'src/transaction/transaction.service'
 
 @Controller('plan')
@@ -47,9 +46,12 @@ export class PlanController {
 
   // Recupera as informações de um plano do usuário
   // (orçamento, gastos no período, inicio e fim do plano e a porcentagem gasta)
-  @Get('progress')
-  getPlanProgress(@Body() planProgressDTO: PlanProgressDTO) {
-    return this.planService.getPlanProgress(planProgressDTO)
+  @Get('progress/:userid/:planid')
+  getPlanProgress(
+    @Param('userid') user_id: string,
+    @Param('planid') plan_id: string,
+  ) {
+    return this.planService.getPlanProgress(user_id, plan_id)
   }
 
   @Get(':id')
