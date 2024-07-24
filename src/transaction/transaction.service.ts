@@ -62,8 +62,8 @@ export class TransactionService {
 
   // Função para retorno do balanço do mês
   async monthlyBalance(user_id: string): Promise<{
-    monthExpense: number
-    monthIncome: number
+    month_expense: number
+    month_income: number
   }> {
     const today = new Date()
     const year = today.getFullYear()
@@ -79,15 +79,15 @@ export class TransactionService {
         GROUP BY transaction_type;  
       `)
 
-    const values = { monthExpense: 0, monthIncome: 0 }
+    const values = { month_expense: 0, month_income: 0 }
 
     data.map((item) => {
       if (item.transaction_type === 'expense') {
-        values.monthExpense = item.sum
+        values.month_expense = item.sum
       }
 
       if (item.transaction_type === 'income') {
-        values.monthIncome = item.sum
+        values.month_income = item.sum
       }
     })
 
@@ -112,7 +112,8 @@ export class TransactionService {
         WHERE "transaction".user_id = '${user_id}' 
         AND category.plan_id = '${plan_id}'
         AND "transaction".transaction_type = 'expense'
-        GROUP BY category.category_id;
+        GROUP BY category.category_id
+        ORDER BY expenses DESC;
       `)
 
     const expensesPerCategory = data.map((item) => {
