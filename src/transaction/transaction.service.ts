@@ -21,7 +21,9 @@ export class TransactionService {
     return this.transactionRepository.findOneBy({ transaction_id })
   }
 
-  addTransaction(addTransactionDTO: AddTransactionDTO): Promise<Transaction> {
+  addTransaction(addTransactionDTO: AddTransactionDTO): {
+    transaction_id: string
+  } {
     const transaction = new Transaction()
     transaction.transaction_id = randomUUID()
     transaction.user_id = addTransactionDTO.user_id
@@ -29,7 +31,8 @@ export class TransactionService {
     transaction.transaction_type = addTransactionDTO.transaction_type
     transaction.transaction_value = addTransactionDTO.transaction_value
     transaction.transaction_date = addTransactionDTO.transaction_date
-    return this.transactionRepository.save(transaction)
+    this.transactionRepository.save(transaction)
+    return { transaction_id: transaction.transaction_id }
   }
 
   deleteTransaction(transaction_id: string): Promise<{ affected?: number }> {

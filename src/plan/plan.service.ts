@@ -12,14 +12,15 @@ export class PlanService {
     @InjectRepository(Plan) private readonly planRepository: Repository<Plan>,
   ) {}
 
-  addPlan(addPlanDTO: AddPlanDTO): Promise<Plan> {
+  addPlan(addPlanDTO: AddPlanDTO): { plan_id: string } {
     const plan = new Plan()
     plan.plan_id = randomUUID()
     plan.user_id = addPlanDTO.user_id
     plan.budget_value = addPlanDTO.budget_value
     plan.start_date = addPlanDTO.start_date
     plan.end_date = addPlanDTO.end_date
-    return this.planRepository.save(plan)
+    this.planRepository.save(plan)
+    return { plan_id: plan.plan_id }
   }
 
   getAllPlans(): Promise<Plan[]> {

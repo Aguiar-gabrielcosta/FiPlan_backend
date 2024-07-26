@@ -12,12 +12,13 @@ export class CategoryService {
     private readonly categoryRepository: Repository<Category>,
   ) {}
 
-  addCategory(addCategoryDTO: AddCategoryDTO): Promise<Category> {
+  async addCategory(addCategoryDTO: AddCategoryDTO) {
     const category = new Category()
     category.category = addCategoryDTO.category
     category.plan_id = addCategoryDTO.plan_id
     category.category_budget = addCategoryDTO.category_budget
-    return this.categoryRepository.save(category)
+    const res = await this.categoryRepository.save(category)
+    return { category_id: res.category_id }
   }
 
   getAllCategories(): Promise<Category[]> {
