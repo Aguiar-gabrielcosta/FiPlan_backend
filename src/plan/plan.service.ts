@@ -27,7 +27,7 @@ export class PlanService {
     return this.planRepository.find()
   }
 
-  getOnePlan(plan_id: string): Promise<Plan> {
+  getPlanById(plan_id: string): Promise<Plan> {
     return this.planRepository.findOneBy({ plan_id })
   }
 
@@ -81,7 +81,7 @@ export class PlanService {
 
     if (!query[0]) {
       const { budget_value, start_date, end_date } =
-        await this.getOnePlan(plan_id)
+        await this.getPlanById(plan_id)
       return {
         budget_value,
         start_date,

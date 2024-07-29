@@ -53,6 +53,6 @@ export class TransactionController {
 
   @Get('balance/:id')
   getMonthlyBalance(@Param('id') id: string) {
-    return this.transactionService.monthlyBalance(id)
+    return this.transactionService.getMonthlyBalance(id)
   }
 }

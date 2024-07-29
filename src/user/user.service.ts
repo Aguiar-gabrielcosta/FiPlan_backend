@@ -12,7 +12,7 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  create(createUserDto: CreateUserDto): { user_id: string } {
+  addUser(createUserDto: CreateUserDto): { user_id: string } {
     const user: User = new User()
     user.user_id = randomUUID()
     user.username = createUserDto.username
@@ -21,15 +21,15 @@ export class UserService {
     return { user_id: user.user_id }
   }
 
-  findAllUsers(): Promise<User[]> {
+  getAllUsers(): Promise<User[]> {
     return this.userRepository.find()
   }
 
-  findOneUser(user_id: string) {
+  getUserById(user_id: string) {
     return this.userRepository.findOneBy({ user_id })
   }
 
-  update(user_id: string, updateUserDto: UpdateUserDto) {
+  updateUser(user_id: string, updateUserDto: UpdateUserDto) {
     const user: User = new User()
     user.user_id = user_id
     user.username = updateUserDto.username
@@ -37,7 +37,7 @@ export class UserService {
     return this.userRepository.save(user)
   }
 
-  remove(user_id: string): Promise<{ affected?: number }> {
+  deleteUser(user_id: string): Promise<{ affected?: number }> {
     return this.userRepository.delete(user_id)
   }
 }

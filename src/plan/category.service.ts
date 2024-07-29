@@ -26,7 +26,7 @@ export class CategoryService {
     return this.categoryRepository.find()
   }
 
-  getOneCategory(category_id: number): Promise<Category> {
+  getCategoryById(category_id: number): Promise<Category> {
     return this.categoryRepository.findOneBy({ category_id })
   }
 

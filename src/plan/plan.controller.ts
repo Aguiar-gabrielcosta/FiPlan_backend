@@ -31,7 +31,7 @@ export class PlanController {
 
   @Get('data/:id')
   findOne(@Param('id') id: string) {
-    return this.planService.getOnePlan(id)
+    return this.planService.getPlanById(id)
   }
 
   @Patch('data/:id')

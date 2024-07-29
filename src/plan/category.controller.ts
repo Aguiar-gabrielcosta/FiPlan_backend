@@ -26,7 +26,7 @@ export class CategoryController {
 
   @Get('data/:id')
   findOneCategory(@Param('id') id: number) {
-    return this.categoryService.getOneCategory(id)
+    return this.categoryService.getCategoryById(id)
   }
 
   @Patch('data/:id')

@@ -13,14 +13,6 @@ export class TransactionService {
     private transactionRepository: Repository<Transaction>,
   ) {}
 
-  getAllTransactions(): Promise<Transaction[]> {
-    return this.transactionRepository.find()
-  }
-
-  getTransactionById(transaction_id: string): Promise<Transaction> {
-    return this.transactionRepository.findOneBy({ transaction_id })
-  }
-
   addTransaction(addTransactionDTO: AddTransactionDTO): {
     transaction_id: string
   } {
@@ -35,8 +27,12 @@ export class TransactionService {
     return { transaction_id: transaction.transaction_id }
   }
 
-  deleteTransaction(transaction_id: string): Promise<{ affected?: number }> {
-    return this.transactionRepository.delete({ transaction_id })
+  getAllTransactions(): Promise<Transaction[]> {
+    return this.transactionRepository.find()
+  }
+
+  getTransactionById(transaction_id: string): Promise<Transaction> {
+    return this.transactionRepository.findOneBy({ transaction_id })
   }
 
   updateTransaction(
@@ -53,6 +49,10 @@ export class TransactionService {
     return this.transactionRepository.save(transaction)
   }
 
+  deleteTransaction(transaction_id: string): Promise<{ affected?: number }> {
+    return this.transactionRepository.delete({ transaction_id })
+  }
+
   // Retorna a soma dos valores de uma lista de transações
   getTotalValue(transactions: Transaction[]): number {
     let totalValue = 0
@@ -64,7 +64,7 @@ export class TransactionService {
   }
 
   // Função para retorno do balanço do mês
-  async monthlyBalance(user_id: string): Promise<{
+  async getMonthlyBalance(user_id: string): Promise<{
     month_expense: number
     month_income: number
   }> {
