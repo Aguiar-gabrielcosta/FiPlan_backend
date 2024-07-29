@@ -18,6 +18,10 @@ export class AddCategoryDTO {
   @IsNotEmpty()
   plan_id: string
 
+  @IsUUID()
+  @IsNotEmpty()
+  user_id: string
+
   @IsNumber()
   category_budget: number
 }

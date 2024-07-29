@@ -41,4 +41,9 @@ export class CategoryController {
   removeCategory(@Param('id') id: number) {
     return this.categoryService.deleteCategory(id)
   }
+
+  @Get(':id')
+  getUserCategories(@Param('id') user_id: string) {
+    return this.categoryService.getAllUserCategories(user_id)
+  }
 }

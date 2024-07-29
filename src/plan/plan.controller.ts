@@ -55,7 +55,7 @@ export class PlanController {
   }
 
   @Get(':id')
-  findUserPlans(@Param('id') id: string) {
-    return this.planService.getAllPlanOfUser(id)
+  findUserPlans(@Param('id') user_id: string) {
+    return this.planService.getAllUserPlans(user_id)
   }
 }

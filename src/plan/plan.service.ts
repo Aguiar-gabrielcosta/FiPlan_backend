@@ -46,7 +46,7 @@ export class PlanService {
   }
 
   // Recupera todos os planos do usuário com user_id
-  getAllPlanOfUser(user_id: string): Promise<Plan[]> {
+  getAllUserPlans(user_id: string): Promise<Plan[]> {
     return this.planRepository.find({
       select: {
         plan_id: true,

@@ -16,6 +16,7 @@ export class CategoryService {
     const category = new Category()
     category.category = addCategoryDTO.category
     category.plan_id = addCategoryDTO.plan_id
+    category.user_id = addCategoryDTO.user_id
     category.category_budget = addCategoryDTO.category_budget
     const res = await this.categoryRepository.save(category)
     return { category_id: res.category_id }
@@ -37,11 +38,24 @@ export class CategoryService {
     newCategory.category_id = category_id
     newCategory.category = updateCategoryDTO.category
     newCategory.plan_id = updateCategoryDTO.plan_id
+    newCategory.user_id = updateCategoryDTO.user_id
     newCategory.category_budget = updateCategoryDTO.category_budget
     return this.categoryRepository.save(newCategory)
   }
 
   deleteCategory(category_id: number): Promise<{ affected?: number }> {
     return this.categoryRepository.delete({ category_id })
+  }
+
+  getAllUserCategories(user_id: string): Promise<Category[]> {
+    return this.categoryRepository.find({
+      select: {
+        category_id: true,
+        plan_id: true,
+        category: true,
+        category_budget: true,
+      },
+      where: { user_id },
+    })
   }
 }
