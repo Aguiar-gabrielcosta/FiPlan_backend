@@ -31,6 +31,6 @@ export class Transaction {
   @Column({ type: 'numeric' })
   transaction_value: number
 
-  @Column({ type: 'date' })
+  @Column({ type: 'timestamp with time zone' })
   transaction_date: string
 }
