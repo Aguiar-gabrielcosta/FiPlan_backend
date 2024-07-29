@@ -79,6 +79,18 @@ export class PlanService {
         GROUP BY plan.plan_id;
       `)
 
+    if (!query[0]) {
+      const { budget_value, start_date, end_date } =
+        await this.getOnePlan(plan_id)
+      return {
+        budget_value,
+        start_date,
+        end_date,
+        total_expenses: 0,
+        progress: 0,
+      }
+    }
+
     const { budget_value, start_date, end_date, total_expenses } = query[0]
 
     return {
