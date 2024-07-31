@@ -56,6 +56,72 @@ beforeAll(async () => {
   transactionRepository = module.get('TransactionRepository')
   categoryRepository = module.get('CategoryRepository')
   planRepository = module.get('PlanRepository')
+
+  await userRepository.save([
+    {
+      user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
+      username: 'testuser1',
+      password: 'testpw1',
+    },
+    {
+      user_id: '3dc5231a-ab37-4c1a-bdee-863d0a467483',
+      username: 'testuser2',
+      password: 'testpw2',
+    },
+  ])
+
+  await planRepository.save([
+    {
+      plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
+      user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
+      budget_value: 10000,
+      start_date: '2024-07-21T21:54:12.669Z',
+      end_date: '2024-07-30T03:00:00.669Z',
+    },
+    {
+      plan_id: '2796460d-4c46-4cfd-ad45-a95e93d4553c',
+      user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
+      budget_value: 7600.32,
+      start_date: '2024-07-30T21:54:12.669Z',
+      end_date: '2024-12-21T21:54:12.669Z',
+    },
+  ])
+
+  await categoryRepository.save([
+    {
+      category_id: 1,
+      category: 'category1',
+      plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
+      category_budget: 3000,
+      user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
+    },
+    {
+      category_id: 2,
+      category: 'category2',
+      plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
+      category_budget: 1500,
+      user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
+    },
+  ])
+
+  await transactionRepository.save([
+    {
+      transaction_id: '61f6c7d7-3f03-427c-bc28-d0429faeb399',
+      user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
+      category_id: 1,
+      transaction_type: 'expense',
+      transaction_value: 1000,
+      transaction_date: '2024-07-21',
+    },
+    {
+      transaction_id: 'd223a945-d627-40d7-9bc4-4cff7dece4ca',
+      user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
+      category_id: 2,
+      transaction_type: 'income',
+      transaction_value: 543.2,
+      transaction_date: '2024-07-21',
+    },
+  ])
 })
 
 // Testes no módulo de usuários
@@ -190,7 +256,7 @@ describe('TransactionController (e2e)', () => {
       {
         transaction_id: '61f6c7d7-3f03-427c-bc28-d0429faeb399',
         user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
-        category_id: 3,
+        category_id: 1,
         transaction_type: 'expense',
         transaction_value: 1000,
         transaction_date: '2024-07-21T03:00:00.000Z',
@@ -198,7 +264,7 @@ describe('TransactionController (e2e)', () => {
       {
         transaction_id: 'd223a945-d627-40d7-9bc4-4cff7dece4ca',
         user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
-        category_id: 4,
+        category_id: 2,
         transaction_type: 'income',
         transaction_value: 543.2,
         transaction_date: '2024-07-21T03:00:00.000Z',
@@ -214,7 +280,7 @@ describe('TransactionController (e2e)', () => {
     expect(body).toEqual({
       transaction_id: 'd223a945-d627-40d7-9bc4-4cff7dece4ca',
       user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
-      category_id: 4,
+      category_id: 2,
       transaction_type: 'income',
       transaction_value: 543.2,
       transaction_date: '2024-07-21T03:00:00.000Z',
@@ -226,7 +292,7 @@ describe('TransactionController (e2e)', () => {
       .post('/transaction/data')
       .send({
         user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
-        category_id: 3,
+        category_id: 1,
         transaction_type: 'income',
         transaction_value: 50,
         transaction_date: '2024-07-31T18:06:25.299Z',
@@ -244,7 +310,7 @@ describe('TransactionController (e2e)', () => {
     await transactionRepository.save({
       transaction_id: transaction_id,
       user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
-      category_id: 3,
+      category_id: 1,
       transaction_type: 'expense',
       transaction_value: 2000,
       transaction_date: '2024-07-31T18:06:25.299Z',
@@ -263,7 +329,7 @@ describe('TransactionController (e2e)', () => {
     await transactionRepository.save({
       transaction_id: transaction_id,
       user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
-      category_id: 4,
+      category_id: 2,
       transaction_type: 'expense',
       transaction_value: 100,
       transaction_date: '2024-07-31T18:06:25.299Z',
@@ -273,7 +339,7 @@ describe('TransactionController (e2e)', () => {
       .patch(`/transaction/data/${transaction_id}`)
       .send({
         user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
-        category_id: 3,
+        category_id: 2,
         transaction_type: 'income',
         transaction_value: 50,
         transaction_date: '2024-08-01T10:06:25.299Z',
@@ -283,7 +349,7 @@ describe('TransactionController (e2e)', () => {
     expect(body).toEqual({
       transaction_id: transaction_id,
       user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
-      category_id: 3,
+      category_id: 2,
       transaction_type: 'income',
       transaction_value: 50,
       transaction_date: '2024-08-01T10:06:25.299Z',
@@ -331,14 +397,14 @@ describe('CategoryController (e2e)', () => {
 
     expect(body).toEqual([
       {
-        category_id: 3,
+        category_id: 1,
         category: 'category1',
         plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
         user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
         category_budget: 3000,
       },
       {
-        category_id: 4,
+        category_id: 2,
         category: 'category2',
         plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
         user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
@@ -349,11 +415,11 @@ describe('CategoryController (e2e)', () => {
 
   it('/category/data/:id (GET) - should get a category by id', async () => {
     const { body } = await request(app.getHttpServer())
-      .get('/category/data/3')
+      .get('/category/data/1')
       .expect(200)
 
     expect(body).toEqual({
-      category_id: 3,
+      category_id: 1,
       category: 'category1',
       plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
       user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
@@ -431,13 +497,13 @@ describe('CategoryController (e2e)', () => {
 
     expect(body).toEqual([
       {
-        category_id: 3,
+        category_id: 1,
         category: 'category1',
         plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
         category_budget: 3000,
       },
       {
-        category_id: 4,
+        category_id: 2,
         category: 'category2',
         plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
         category_budget: 1500,
@@ -459,7 +525,7 @@ describe('PlanController (e2e)', () => {
         user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
         budget_value: 10000,
         start_date: '2024-07-21T21:54:12.669Z',
-        end_date: '2024-07-30T03:00:00.000Z',
+        end_date: '2024-07-30T03:00:00.669Z',
       },
       {
         plan_id: '2796460d-4c46-4cfd-ad45-a95e93d4553c',
@@ -563,7 +629,7 @@ describe('PlanController (e2e)', () => {
         plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
         budget_value: 10000,
         start_date: '2024-07-21T21:54:12.669Z',
-        end_date: '2024-07-30T03:00:00.000Z',
+        end_date: '2024-07-30T03:00:00.669Z',
       },
       {
         plan_id: '2796460d-4c46-4cfd-ad45-a95e93d4553c',
@@ -572,7 +638,7 @@ describe('PlanController (e2e)', () => {
         end_date: '2024-12-21T21:54:12.669Z',
       },
     ])
-  })
+  }, 3000)
 
   it('/plan/:id (GET) - should get empty array if user do not have plans', async () => {
     const user_id = '3dc5231a-ab37-4c1a-bdee-863d0a467483'
@@ -582,7 +648,7 @@ describe('PlanController (e2e)', () => {
       .expect(200)
 
     expect(body).toEqual([])
-  })
+  }, 3000)
 
   it('/plan/progress/:userid/:planid (GET) - should get plan progress from a given plan from user', async () => {
     const user_id = '2dc5231a-ab37-4c1a-bdee-863d0a467483'
@@ -595,11 +661,11 @@ describe('PlanController (e2e)', () => {
     expect(body).toEqual({
       budget_value: 10000,
       start_date: '2024-07-21T21:54:12.669Z',
-      end_date: '2024-07-30T03:00:00.000Z',
+      end_date: '2024-07-30T03:00:00.669Z',
       total_expenses: 1000,
       progress: 0.1,
     })
-  })
+  }, 3000)
 
   it('/plan/progress/:userid/:planid (GET) - should get plan progress from a given plan from user with no transactions', async () => {
     const user_id = '2dc5231a-ab37-4c1a-bdee-863d0a467483'
@@ -616,7 +682,7 @@ describe('PlanController (e2e)', () => {
       total_expenses: 0,
       progress: 0,
     })
-  })
+  }, 3000)
 })
 
 // Encerra a aplicação de testes

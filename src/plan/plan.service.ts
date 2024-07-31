@@ -64,8 +64,8 @@ export class PlanService {
     plan_id: string,
   ): Promise<{
     budget_value: number
-    start_date: string
-    end_date: string
+    start_date: Date
+    end_date: Date
     total_expenses: number
     progress: number
   }> {

@@ -21,8 +21,8 @@ export class Plan {
   budget_value: number
 
   @Column({ type: 'timestamp with time zone' })
-  start_date: string
+  start_date: Date
 
   @Column({ type: 'timestamp with time zone' })
-  end_date: string
+  end_date: Date
 }
