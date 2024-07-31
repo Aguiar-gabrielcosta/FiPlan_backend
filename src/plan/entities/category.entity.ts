@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import { Plan } from './plan.entity'
-import { User } from 'src/user/entities/user.entity'
+import { User } from '../../user/entities/user.entity'
 
 @Entity()
 export class Category {
@@ -16,22 +16,26 @@ export class Category {
   @Column({ type: 'varchar', length: 50 })
   category: string
 
-  @Column({ type: 'uuid' })
   @ManyToOne(() => Plan)
   @JoinColumn({
     name: 'plan_id',
     referencedColumnName: 'plan_id',
     foreignKeyConstraintName: 'fk_plan_id',
   })
-  plan_id: string
+  plan: Plan
 
   @Column({ type: 'uuid' })
+  plan_id: string
+
   @ManyToOne(() => User)
   @JoinColumn({
     name: 'user_id',
     referencedColumnName: 'user_id',
     foreignKeyConstraintName: 'fk_user_id',
   })
+  user: User
+
+  @Column({ type: 'uuid' })
   user_id: string
 
   @Column({ type: 'numeric' })

@@ -35,7 +35,7 @@ export class CategoryService {
     updateCategoryDTO: UpdateCategoryDTO,
   ): Promise<Category> {
     const newCategory = new Category()
-    newCategory.category_id = category_id
+    newCategory.category_id = updateCategoryDTO.category_id
     newCategory.category = updateCategoryDTO.category
     newCategory.plan_id = updateCategoryDTO.plan_id
     newCategory.user_id = updateCategoryDTO.user_id

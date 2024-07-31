@@ -1,5 +1,5 @@
-import { Category } from 'src/plan/entities/category.entity'
-import { User } from 'src/user/entities/user.entity'
+import { Category } from '../../plan/entities/category.entity'
+import { User } from '../../user/entities/user.entity'
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 
 @Entity()
@@ -7,30 +7,34 @@ export class Transaction {
   @PrimaryColumn({ type: 'uuid' })
   transaction_id: string
 
-  @Column({ type: 'uuid' })
   @ManyToOne(() => User)
   @JoinColumn({
     name: 'user_id',
     referencedColumnName: 'user_id',
     foreignKeyConstraintName: 'fk_user_id',
   })
+  user: User
+
+  @Column({ type: 'uuid' })
   user_id: string
 
-  @Column({ type: 'integer' })
   @ManyToOne(() => Category)
   @JoinColumn({
     name: 'category_id',
     referencedColumnName: 'category_id',
     foreignKeyConstraintName: 'fk_category_id',
   })
+  category: Category
+
+  @Column({ type: 'integer' })
   category_id: number
 
-  @Column({ type: 'text', enum: ['expense', 'income'] })
+  @Column({ type: 'text' })
   transaction_type: 'expense' | 'income'
 
-  @Column({ type: 'numeric' })
+  @Column({ type: 'numeric', precision: 10, scale: 3 })
   transaction_value: number
 
   @Column({ type: 'timestamp with time zone' })
-  transaction_date: string
+  transaction_date: Date
 }

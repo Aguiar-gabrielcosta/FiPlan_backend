@@ -1,4 +1,4 @@
-import { IsIn, IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator'
+import { IsIn, IsISO8601, IsNotEmpty, IsNumber, IsUUID } from 'class-validator'
 
 export class AddTransactionDTO {
   @IsNotEmpty()
@@ -16,7 +16,6 @@ export class AddTransactionDTO {
   @IsNumber()
   transaction_value: number
 
-  @IsNotEmpty()
-  @IsString()
-  transaction_date: string
+  @IsISO8601()
+  transaction_date: Date
 }
