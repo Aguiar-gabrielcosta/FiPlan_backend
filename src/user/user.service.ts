@@ -12,12 +12,12 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  addUser(createUserDto: CreateUserDto): { user_id: string } {
+  async addUser(createUserDto: CreateUserDto): Promise<{ user_id: string }> {
     const user: User = new User()
     user.user_id = randomUUID()
     user.username = createUserDto.username
     user.password = createUserDto.password
-    this.userRepository.save(user)
+    await this.userRepository.save(user)
     return { user_id: user.user_id }
   }
 

@@ -6,10 +6,9 @@ import { Plan } from './entities/plan.entity'
 import { CategoryService } from './category.service'
 import { Category } from './entities/category.entity'
 import { CategoryController } from './category.controller'
-import { TransactionModule } from 'src/transaction/transaction.module'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Plan, Category]), TransactionModule],
+  imports: [TypeOrmModule.forFeature([Plan, Category])],
   controllers: [PlanController, CategoryController],
   providers: [PlanService, CategoryService],
   exports: [PlanService, CategoryService],

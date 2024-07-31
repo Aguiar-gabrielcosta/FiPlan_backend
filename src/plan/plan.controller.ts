@@ -10,14 +10,10 @@ import {
 import { PlanService } from './plan.service'
 import { AddPlanDTO } from './dto/addPlan.dto'
 import { UpdatePlanDTO } from './dto/updatePlan.dto'
-import { TransactionService } from 'src/transaction/transaction.service'
 
 @Controller('plan')
 export class PlanController {
-  constructor(
-    private readonly planService: PlanService,
-    private readonly transactionService: TransactionService,
-  ) {}
+  constructor(private readonly planService: PlanService) {}
 
   @Post('data')
   create(@Body() createPlanDTO: AddPlanDTO) {
