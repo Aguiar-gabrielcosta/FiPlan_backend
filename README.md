@@ -1,3 +1,7 @@
+# FiPlan Back-End Server - v0.1.0
+
+## Feito com Nest.js
+<hr>
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
@@ -21,48 +25,59 @@
 </p>
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<hr>
 
-## Description
+## Descrição
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Este servidor é utilizado para a comunicação com entre o cliente e a banco de dados da aplicação [FiPlan](https://fiplan.vercel.app/). 
 
-## Installation
+## Instalação
 
 ```bash
 $ pnpm install
 ```
 
-## Running the app
+## Variáveis de ambiente
 
 ```bash
-# development
+# desenvolvimento
+DEV_PORT # porta para o servidor local
+
+# banco de dados
+DB_HOST # host do banco
+DB_PORT # porta do banco
+DB_PASSWORD # senha do banco
+DB_USERNAME # nome de usuário do banco
+DB_DATABASE # nome da base de dados
+
+# banco de dados para teste
+DB_DATABASE_TEST # nome da base de dados de teste
+```
+
+## Rodando o servidor
+
+```bash
+# desenvolvimento
 $ pnpm run start
 
 # watch mode
 $ pnpm run start:dev
 
-# production mode
+# produção
 $ pnpm run start:prod
+
+# build
+$ pnpm run build
 ```
 
-## Test
+## Testes
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
+# testes E2E
 $ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
+## Links Nest.js
 
 - Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
 - Website - [https://nestjs.com](https://nestjs.com/)
