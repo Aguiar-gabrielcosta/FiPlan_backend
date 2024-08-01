@@ -1,0 +1,42 @@
+databases:
+  - name: finplandb
+    databaseName: finplandb
+    user: finplandb_user
+    plan: free
+    region: ohio
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: everywhere
+    postgresMajorVersion: "16"
+services:
+  - type: web
+    name: fiplan.api
+    runtime: node
+    repo: https://github.com/Aguiar-gabrielcosta/FiPlan_backend
+    plan: free
+    envVars:
+      - key: PORT
+        sync: false
+      - key: DB_USERNAME
+        fromDatabase:
+          name: finplandb
+          property: user
+      - key: DB_PORT
+        sync: false
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: finplandb
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: finplandb
+          property: host
+      - key: DB_DATABASE
+        fromDatabase:
+          name: finplandb
+          property: database
+    region: ohio
+    buildCommand: pnpm install --frozen-lockfile; pnpm run build
+    startCommand: pnpm run start
+    pullRequestPreviewsEnabled: true
+version: "1"
