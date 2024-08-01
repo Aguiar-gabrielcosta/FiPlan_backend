@@ -6,6 +6,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   // Validação em todas as entradas de dados.
   app.useGlobalPipes(new ValidationPipe())
-  await app.listen(process.env.DEV_PORT)
+  const PORT = process.env.PORT || 4000
+  await app.listen(PORT)
+
+  console.log(`App listening PORT ${PORT}`)
 }
 bootstrap()
