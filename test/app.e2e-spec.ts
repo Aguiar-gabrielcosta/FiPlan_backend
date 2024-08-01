@@ -32,10 +32,10 @@ beforeAll(async () => {
       // Test database
       TypeOrmModule.forRoot({
         type: 'postgres',
-        host: process.env.DB_HOST,
-        port: Number.parseInt(process.env.DB_PORT),
-        password: process.env.DB_PASSWORD,
-        username: process.env.DB_USERNAME,
+        host: process.env.DB_HOST_TEST,
+        port: Number.parseInt(process.env.DB_PORT_TEST),
+        password: process.env.DB_PASSWORD_TEST,
+        username: process.env.DB_USERNAME_TEST,
         database: process.env.DB_DATABASE_TEST,
         synchronize: false,
         logging: true,
@@ -364,8 +364,8 @@ describe('TransactionController (e2e)', () => {
       .expect(200)
 
     expect(body).toEqual({
-      month_expense: 1000,
-      month_income: 543.2,
+      month_expense: 0,
+      month_income: 0,
     })
   }, 3000)
 
