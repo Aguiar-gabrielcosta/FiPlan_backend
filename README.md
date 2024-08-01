@@ -1,4 +1,4 @@
-# FiPlan Back-End Server - v0.2.0
+# FiPlan - Back-End Server - v0.2.0
 
 ## Feito com Nest.js
 <hr>
@@ -25,6 +25,17 @@
 </p>
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+
+#### Links Nest.js
+
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
+
+#### License
+
+Nest is [MIT licensed](LICENSE).
+
 <hr>
 
 ## Descrição
@@ -77,12 +88,3 @@ $ pnpm run build
 $ pnpm run test:e2e
 ```
 
-## Links Nest.js
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
