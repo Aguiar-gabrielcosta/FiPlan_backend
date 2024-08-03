@@ -10,6 +10,7 @@ import {
 import { CategoryService } from './category.service'
 import { AddCategoryDTO } from './dto/addCategory.dto'
 import { UpdateCategoryDTO } from './dto/updateCategory.dto'
+import { AddCategoryBatchDTO } from './dto/addCategoryBatch.dto'
 
 @Controller('category')
 export class CategoryController {
@@ -17,6 +18,11 @@ export class CategoryController {
   @Post('data')
   createCategory(@Body() addCategoryDTO: AddCategoryDTO) {
     return this.categoryService.addCategory(addCategoryDTO)
+  }
+
+  @Post('data/batch')
+  addCategoryBatch(@Body() addCategoryBatchDTO: AddCategoryBatchDTO) {
+    return this.categoryService.addCategoryBatch(addCategoryBatchDTO)
   }
 
   @Get('data')

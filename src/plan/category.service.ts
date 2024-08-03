@@ -4,6 +4,7 @@ import { Repository } from 'typeorm'
 import { Category } from './entities/category.entity'
 import { AddCategoryDTO } from './dto/addCategory.dto'
 import { UpdateCategoryDTO } from './dto/updateCategory.dto'
+import { AddCategoryBatchDTO } from './dto/addCategoryBatch.dto'
 
 @Injectable()
 export class CategoryService {
@@ -57,5 +58,28 @@ export class CategoryService {
       },
       where: { user_id },
     })
+  }
+
+  async addCategoryBatch(addCategoryBatchDTO: AddCategoryBatchDTO) {
+    // Cria um array de categorias para ser inserido no banco
+    const categories = addCategoryBatchDTO.categories.map((categoryData) => {
+      const category = new Category()
+      category.user_id = categoryData.user_id
+      category.plan_id = categoryData.plan_id
+      category.category = categoryData.category
+      category.category_budget = categoryData.category_budget
+      return category
+    })
+
+    // Insere as categorias
+    const res = await this.categoryRepository.save(categories)
+
+    // Retorna os IDs
+    const ids = res.map((item) => {
+      return {
+        category_id: item.category_id,
+      }
+    })
+    return ids
   }
 }
