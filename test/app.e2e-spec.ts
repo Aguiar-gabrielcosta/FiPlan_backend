@@ -443,6 +443,37 @@ describe('CategoryController (e2e)', () => {
     await categoryRepository.delete(body.category_id)
   }, 3000)
 
+  it('/category/data/batch (POST) - should add an array of categories', async () => {
+    const newCategories = {
+      categories: [
+        {
+          category: 'category1BatchTest',
+          plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
+          user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
+          category_budget: 1000,
+        },
+        {
+          category: 'category2BatchTest',
+          plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
+          user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
+          category_budget: 2000,
+        },
+      ],
+    }
+
+    const { body } = await request(app.getHttpServer())
+      .post('/category/data/batch')
+      .send(newCategories)
+      .expect(201)
+
+    expect(body).toEqual([
+      { category_id: expect.any(Number) },
+      { category_id: expect.any(Number) },
+    ])
+
+    await categoryRepository.delete(body)
+  }, 3000)
+
   it('/category/data/:id (DELETE) - should delete a category', async () => {
     const { category_id } = await categoryRepository.save({
       category: 'categoryTestDelete',
