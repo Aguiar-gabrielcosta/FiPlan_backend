@@ -540,6 +540,32 @@ describe('CategoryController (e2e)', () => {
         category_budget: 1500,
       },
     ])
+  }, 3000)
+
+  it('/category/progress/:userid/:planid (GET) = should get all categories progress', async () => {
+    const user_id = '2dc5231a-ab37-4c1a-bdee-863d0a467483'
+    const plan_id = '2796460d-4c46-4cfd-ae9f-a95e93d4189b'
+
+    const { body } = await request(app.getHttpServer())
+      .get(`/category/progress/${user_id}/${plan_id}`)
+      .expect(200)
+
+    expect(body).toEqual([
+      {
+        category_id: 1,
+        category: 'category1',
+        category_budget: 3000,
+        total_expenses: 1000,
+        progress: 0.33,
+      },
+      {
+        category_id: 2,
+        category: 'category2',
+        category_budget: 1500,
+        total_expenses: 0,
+        progress: 0,
+      },
+    ])
   })
 })
 

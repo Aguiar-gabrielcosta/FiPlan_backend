@@ -48,6 +48,14 @@ export class CategoryController {
     return this.categoryService.deleteCategory(id)
   }
 
+  @Get('/progress/:userid/:planid')
+  getCategoriesProgress(
+    @Param('userid') user_id: string,
+    @Param('planid') plan_id: string,
+  ) {
+    return this.categoryService.getCategoriesProgress(user_id, plan_id)
+  }
+
   @Get(':id')
   getUserCategories(@Param('id') user_id: string) {
     return this.categoryService.getAllUserCategories(user_id)

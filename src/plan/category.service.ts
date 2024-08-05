@@ -48,6 +48,7 @@ export class CategoryService {
     return this.categoryRepository.delete({ category_id })
   }
 
+  // Recupera todas as categorias de um usuário
   getAllUserCategories(user_id: string): Promise<Category[]> {
     return this.categoryRepository.find({
       select: {
@@ -60,6 +61,7 @@ export class CategoryService {
     })
   }
 
+  // Adiciona um array de categorias ao banco
   async addCategoryBatch(addCategoryBatchDTO: AddCategoryBatchDTO) {
     // Cria um array de categorias para ser inserido no banco
     const categories = addCategoryBatchDTO.categories.map((categoryData) => {
@@ -81,5 +83,39 @@ export class CategoryService {
       }
     })
     return ids
+  }
+
+  // Recupera o progresso das categorias de um plano
+  async getCategoriesProgress(
+    user_id: string,
+    plan_id: string,
+  ): Promise<
+    {
+      category_id: number
+      category: string
+      categor_budget: number
+      total_expenses: number
+      progress: number
+    }[]
+  > {
+    const data = await this.categoryRepository.query(`
+        SELECT category.category_id, category.category, COALESCE(SUM("transaction".transaction_value), 0) AS total_expenses, category.category_budget FROM category
+        LEFT JOIN "transaction" ON category.category_id = "transaction".category_id AND "transaction".transaction_type = 'expense'
+        WHERE category.user_id = '${user_id}'
+        AND category.plan_id = '${plan_id}'
+        GROUP BY category.category_id
+        ORDER BY category_budget DESC;
+      `)
+
+    const categoriesProgress = data.map((item) => {
+      return {
+        progress: parseFloat(
+          (item.total_expenses / item.category_budget).toFixed(2),
+        ),
+        ...item,
+      }
+    })
+
+    return categoriesProgress
   }
 }
