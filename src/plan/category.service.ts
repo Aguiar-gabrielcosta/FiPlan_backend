@@ -60,6 +60,17 @@ export class CategoryService {
     })
   }
 
+  getAllPlanCategories(plan_id: string): Promise<Category[]> {
+    return this.categoryRepository.find({
+      select: {
+        category_id: true,
+        category: true,
+        category_budget: true,
+      },
+      where: { plan_id },
+    })
+  }
+
   // Adiciona um array de categorias ao banco
   async addCategoryBatch(addCategoryBatchDTO: AddCategoryBatchDTO) {
     // Cria um array de categorias para ser inserido no banco

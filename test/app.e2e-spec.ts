@@ -521,6 +521,27 @@ describe('CategoryController (e2e)', () => {
     ])
   }, 3000)
 
+  it('/category/plan/:id (GET) - should get all categories from plan', async () => {
+    const plan_id = '2796460d-4c46-4cfd-ae9f-a95e93d4189b'
+
+    const { body } = await request(app.getHttpServer())
+      .get(`/category/plan/${plan_id}`)
+      .expect(200)
+
+    expect(body).toEqual([
+      {
+        category_id: 1,
+        category: 'category1',
+        category_budget: 3000,
+      },
+      {
+        category_id: 2,
+        category: 'category2',
+        category_budget: 1500,
+      },
+    ])
+  }, 3000)
+
   it('/category/progress/:userid/:planid (GET) = should get all categories progress', async () => {
     const user_id = '2dc5231a-ab37-4c1a-bdee-863d0a467483'
     const plan_id = '2796460d-4c46-4cfd-ae9f-a95e93d4189b'
@@ -545,7 +566,7 @@ describe('CategoryController (e2e)', () => {
         progress: 0,
       },
     ])
-  })
+  }, 3000)
 })
 
 // Testes no módulo de planos, controlador de planos

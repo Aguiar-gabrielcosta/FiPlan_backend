@@ -56,6 +56,11 @@ export class CategoryController {
     return this.categoryService.getCategoriesProgress(user_id, plan_id)
   }
 
+  @Get('/plan/:id')
+  getPlanCategories(@Param('id') plan_id: string) {
+    return this.categoryService.getAllPlanCategories(plan_id)
+  }
+
   @Get(':id')
   getUserCategories(@Param('id') user_id: string) {
     return this.categoryService.getAllUserCategories(user_id)
