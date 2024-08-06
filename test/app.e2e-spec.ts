@@ -206,11 +206,7 @@ describe('UserController (e2e)', () => {
       .send({ username: 'testupdated', password: 'testupdated123' })
       .expect(200)
 
-    expect(body).toEqual({
-      user_id: user_id,
-      username: 'testupdated',
-      password: 'testupdated123',
-    })
+    expect(body.affected).toEqual(1)
 
     await userRepository.delete(user_id)
   }, 3000)
@@ -229,10 +225,7 @@ describe('UserController (e2e)', () => {
       .send({ password: 'testupdated123' })
       .expect(200)
 
-    expect(body).toEqual({
-      user_id: user_id,
-      password: 'testupdated123',
-    })
+    expect(body.affected).toEqual(1)
 
     await userRepository.delete(user_id)
   }, 3000)
@@ -346,14 +339,7 @@ describe('TransactionController (e2e)', () => {
       })
       .expect(200)
 
-    expect(body).toEqual({
-      transaction_id: transaction_id,
-      user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
-      category_id: 2,
-      transaction_type: 'income',
-      transaction_value: 50,
-      transaction_date: '2024-08-01T10:06:25.299Z',
-    })
+    expect(body.affected).toEqual(1)
 
     await transactionRepository.delete(transaction_id)
   }, 3000)
@@ -500,7 +486,6 @@ describe('CategoryController (e2e)', () => {
     const { body } = await request(app.getHttpServer())
       .patch(`/category/data/${category_id}`)
       .send({
-        category_id: category_id,
         category: 'categoryTestUpdated',
         plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
         user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
@@ -508,13 +493,7 @@ describe('CategoryController (e2e)', () => {
       })
       .expect(200)
 
-    expect(body).toEqual({
-      category_id: category_id,
-      category: 'categoryTestUpdated',
-      plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
-      user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
-      category_budget: 3000,
-    })
+    expect(body.affected).toEqual(1)
 
     await categoryRepository.delete(category_id)
   }, 3000)
@@ -663,13 +642,7 @@ describe('PlanController (e2e)', () => {
       })
       .expect(200)
 
-    expect(body).toEqual({
-      plan_id: plan_id,
-      user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
-      budget_value: 3000,
-      start_date: '2024-07-31T20:00:00.669Z',
-      end_date: '2024-08-30T20:00:00.669Z',
-    })
+    expect(body.affected).toEqual(1)
 
     await planRepository.delete(plan_id)
   }, 3000)

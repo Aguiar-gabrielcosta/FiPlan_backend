@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Transaction } from './entities/transaction.entity'
-import { Repository } from 'typeorm'
+import { Repository, UpdateResult } from 'typeorm'
 import { AddTransactionDTO } from './dto/addTransaction.dto'
 import { randomUUID } from 'crypto'
 import { UpdateTransactionDTO } from './dto/updateTransaction.dto'
@@ -38,15 +38,14 @@ export class TransactionService {
   updateTransaction(
     transaction_id: string,
     updateTransactionDTO: UpdateTransactionDTO,
-  ): Promise<Transaction> {
+  ): Promise<UpdateResult> {
     const transaction = new Transaction()
-    transaction.transaction_id = transaction_id
     transaction.user_id = updateTransactionDTO.user_id
     transaction.category_id = updateTransactionDTO.category_id
     transaction.transaction_date = updateTransactionDTO.transaction_date
     transaction.transaction_type = updateTransactionDTO.transaction_type
     transaction.transaction_value = updateTransactionDTO.transaction_value
-    return this.transactionRepository.save(transaction)
+    return this.transactionRepository.update(transaction_id, transaction)
   }
 
   deleteTransaction(transaction_id: string): Promise<{ affected?: number }> {

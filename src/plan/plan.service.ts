@@ -3,7 +3,7 @@ import { AddPlanDTO } from './dto/addPlan.dto'
 import { UpdatePlanDTO } from './dto/updatePlan.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Plan } from './entities/plan.entity'
-import { Repository } from 'typeorm'
+import { Repository, UpdateResult } from 'typeorm'
 import { randomUUID } from 'crypto'
 
 @Injectable()
@@ -31,14 +31,16 @@ export class PlanService {
     return this.planRepository.findOneBy({ plan_id })
   }
 
-  updatePlan(plan_id: string, updatePlanDTO: UpdatePlanDTO): Promise<Plan> {
+  updatePlan(
+    plan_id: string,
+    updatePlanDTO: UpdatePlanDTO,
+  ): Promise<UpdateResult> {
     const plan = new Plan()
-    plan.plan_id = plan_id
     plan.user_id = updatePlanDTO.user_id
     plan.budget_value = updatePlanDTO.budget_value
     plan.start_date = updatePlanDTO.start_date
     plan.end_date = updatePlanDTO.end_date
-    return this.planRepository.save(plan)
+    return this.planRepository.update(plan_id, plan)
   }
 
   deletePlan(plan_id: string): Promise<{ affected?: number }> {

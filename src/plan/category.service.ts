@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { Repository, UpdateResult } from 'typeorm'
 import { Category } from './entities/category.entity'
 import { AddCategoryDTO } from './dto/addCategory.dto'
 import { UpdateCategoryDTO } from './dto/updateCategory.dto'
@@ -34,14 +34,13 @@ export class CategoryService {
   updateCategory(
     category_id: number,
     updateCategoryDTO: UpdateCategoryDTO,
-  ): Promise<Category> {
+  ): Promise<UpdateResult> {
     const newCategory = new Category()
-    newCategory.category_id = updateCategoryDTO.category_id
     newCategory.category = updateCategoryDTO.category
     newCategory.plan_id = updateCategoryDTO.plan_id
     newCategory.user_id = updateCategoryDTO.user_id
     newCategory.category_budget = updateCategoryDTO.category_budget
-    return this.categoryRepository.save(newCategory)
+    return this.categoryRepository.update(category_id, newCategory)
   }
 
   deleteCategory(category_id: number): Promise<{ affected?: number }> {
