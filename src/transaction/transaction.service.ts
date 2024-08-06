@@ -39,13 +39,12 @@ export class TransactionService {
     transaction_id: string,
     updateTransactionDTO: UpdateTransactionDTO,
   ): Promise<UpdateResult> {
-    const transaction = new Transaction()
-    transaction.user_id = updateTransactionDTO.user_id
-    transaction.category_id = updateTransactionDTO.category_id
-    transaction.transaction_date = updateTransactionDTO.transaction_date
-    transaction.transaction_type = updateTransactionDTO.transaction_type
-    transaction.transaction_value = updateTransactionDTO.transaction_value
-    return this.transactionRepository.update(transaction_id, transaction)
+    return this.transactionRepository.update(transaction_id, {
+      category_id: updateTransactionDTO.category_id,
+      transaction_date: updateTransactionDTO.transaction_date,
+      transaction_type: updateTransactionDTO.transaction_type,
+      transaction_value: updateTransactionDTO.transaction_value,
+    })
   }
 
   deleteTransaction(transaction_id: string): Promise<{ affected?: number }> {

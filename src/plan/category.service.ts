@@ -35,12 +35,10 @@ export class CategoryService {
     category_id: number,
     updateCategoryDTO: UpdateCategoryDTO,
   ): Promise<UpdateResult> {
-    const newCategory = new Category()
-    newCategory.category = updateCategoryDTO.category
-    newCategory.plan_id = updateCategoryDTO.plan_id
-    newCategory.user_id = updateCategoryDTO.user_id
-    newCategory.category_budget = updateCategoryDTO.category_budget
-    return this.categoryRepository.update(category_id, newCategory)
+    return this.categoryRepository.update(category_id, {
+      category: updateCategoryDTO.category,
+      category_budget: updateCategoryDTO.category_budget,
+    })
   }
 
   deleteCategory(category_id: number): Promise<{ affected?: number }> {

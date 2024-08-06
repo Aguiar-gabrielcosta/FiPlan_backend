@@ -35,12 +35,11 @@ export class PlanService {
     plan_id: string,
     updatePlanDTO: UpdatePlanDTO,
   ): Promise<UpdateResult> {
-    const plan = new Plan()
-    plan.user_id = updatePlanDTO.user_id
-    plan.budget_value = updatePlanDTO.budget_value
-    plan.start_date = updatePlanDTO.start_date
-    plan.end_date = updatePlanDTO.end_date
-    return this.planRepository.update(plan_id, plan)
+    return this.planRepository.update(plan_id, {
+      budget_value: updatePlanDTO.budget_value,
+      start_date: updatePlanDTO.start_date,
+      end_date: updatePlanDTO.end_date,
+    })
   }
 
   deletePlan(plan_id: string): Promise<{ affected?: number }> {
