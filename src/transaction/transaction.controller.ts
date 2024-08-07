@@ -51,6 +51,19 @@ export class TransactionController {
     return this.transactionService.getExpensesPerCategory(user_id, plan_id)
   }
 
+  @Get('history/:userid/:page')
+  getHistoryPage(
+    @Param('userid') user_id: string,
+    @Param('page') page: number,
+  ) {
+    return this.transactionService.getTransactionsHistoryPage(user_id, page)
+  }
+
+  @Get('pages/:userid')
+  getPageNumber(@Param('userid') user_id: string) {
+    return this.transactionService.getPageNumber(user_id)
+  }
+
   @Get('balance/:id')
   getMonthlyBalance(@Param('id') id: string) {
     return this.transactionService.getMonthlyBalance(id)

@@ -372,6 +372,41 @@ describe('TransactionController (e2e)', () => {
       },
     ])
   }, 3000)
+
+  it('/transaction/pages/:userid (GET) - should get the number of transactions pages (10 per page)', async () => {
+    const user_id = '2dc5231a-ab37-4c1a-bdee-863d0a467483'
+
+    const { body } = await request(app.getHttpServer())
+      .get(`/transaction/pages/${user_id}`)
+      .expect(200)
+
+    expect(body.pages).toEqual(1)
+  }, 3000)
+
+  it('/transaction/history/:userid/:page (GET) - should get the number of transactions pages (10 per page)', async () => {
+    const user_id = '2dc5231a-ab37-4c1a-bdee-863d0a467483'
+
+    const { body } = await request(app.getHttpServer())
+      .get(`/transaction/history/${user_id}/${1}`)
+      .expect(200)
+
+    expect(body).toEqual([
+      {
+        transaction_id: '61f6c7d7-3f03-427c-bc28-d0429faeb399',
+        category: 'category1',
+        transaction_type: 'expense',
+        transaction_value: 1000,
+        transaction_date: '2024-07-21T03:00:00.000Z',
+      },
+      {
+        transaction_id: 'd223a945-d627-40d7-9bc4-4cff7dece4ca',
+        category: 'category2',
+        transaction_type: 'income',
+        transaction_value: 543.2,
+        transaction_date: '2024-07-21T03:00:00.000Z',
+      },
+    ])
+  }, 3000)
 })
 
 // Testes no módulo de planos, controlador de categorias
