@@ -129,6 +129,7 @@ export class TransactionService {
     return expensesPerCategory
   }
 
+  // Função que conta o número de páginas
   async getPageNumber(
     user_id: string,
   ): Promise<{ pages: number; items_per_page: number }> {
@@ -137,7 +138,12 @@ export class TransactionService {
       where: { user_id },
     })
 
-    const pages = Math.floor(numberOfTransactions / this.items_per_page) + 1
+    let pages = Math.floor(numberOfTransactions / this.items_per_page) + 1
+    const needNewPage = numberOfTransactions % this.items_per_page !== 0
+
+    if (!needNewPage) {
+      pages = pages - 1
+    }
 
     return { pages: pages, items_per_page: items_per_page }
   }
