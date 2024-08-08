@@ -162,7 +162,7 @@ export class TransactionService {
         FROM "transaction"
         JOIN category ON "transaction".category_id = category.category_id
         WHERE "transaction".user_id = '${user_id}'
-        ORDER BY "transaction".transaction_date
+        ORDER BY "transaction".transaction_date DESC
         LIMIT ${items_per_page} OFFSET ${offset}
       `)
 
