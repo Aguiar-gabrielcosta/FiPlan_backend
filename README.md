@@ -1,4 +1,4 @@
-# FiPlan - Back-End Server - v0.2.0
+# FiPlan - Back-End Server - v1.0.0
 
 ## Feito com Nest.js
 <hr>
