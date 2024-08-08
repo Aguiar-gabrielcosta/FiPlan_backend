@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Transaction } from './entities/transaction.entity'
-import { Repository } from 'typeorm'
+import { Repository, UpdateResult } from 'typeorm'
 import { AddTransactionDTO } from './dto/addTransaction.dto'
 import { randomUUID } from 'crypto'
 import { UpdateTransactionDTO } from './dto/updateTransaction.dto'
@@ -12,6 +12,8 @@ export class TransactionService {
     @InjectRepository(Transaction)
     private transactionRepository: Repository<Transaction>,
   ) {}
+
+  private items_per_page: number = 10
 
   addTransaction(addTransactionDTO: AddTransactionDTO): {
     transaction_id: string
@@ -38,15 +40,13 @@ export class TransactionService {
   updateTransaction(
     transaction_id: string,
     updateTransactionDTO: UpdateTransactionDTO,
-  ): Promise<Transaction> {
-    const transaction = new Transaction()
-    transaction.transaction_id = transaction_id
-    transaction.user_id = updateTransactionDTO.user_id
-    transaction.category_id = updateTransactionDTO.category_id
-    transaction.transaction_date = updateTransactionDTO.transaction_date
-    transaction.transaction_type = updateTransactionDTO.transaction_type
-    transaction.transaction_value = updateTransactionDTO.transaction_value
-    return this.transactionRepository.save(transaction)
+  ): Promise<UpdateResult> {
+    return this.transactionRepository.update(transaction_id, {
+      category_id: updateTransactionDTO.category_id,
+      transaction_date: updateTransactionDTO.transaction_date,
+      transaction_type: updateTransactionDTO.transaction_type,
+      transaction_value: updateTransactionDTO.transaction_value,
+    })
   }
 
   deleteTransaction(transaction_id: string): Promise<{ affected?: number }> {
@@ -127,5 +127,51 @@ export class TransactionService {
     })
 
     return expensesPerCategory
+  }
+
+  // Função que conta o número de páginas
+  async getPageNumber(
+    user_id: string,
+  ): Promise<{ pages: number; items_per_page: number }> {
+    const items_per_page = this.items_per_page
+    const numberOfTransactions = await this.transactionRepository.count({
+      where: { user_id },
+    })
+
+    let pages = Math.floor(numberOfTransactions / this.items_per_page) + 1
+    const needNewPage = numberOfTransactions % this.items_per_page !== 0
+
+    if (!needNewPage) {
+      pages = pages - 1
+    }
+
+    return { pages: pages, items_per_page: items_per_page }
+  }
+
+  async getTransactionsHistoryPage(
+    user_id: string,
+    page: number,
+  ): Promise<
+    {
+      transaction_id: string
+      category: string
+      transaction_value: number
+      transaction_type: 'expense' | 'income'
+      transaction_date: string
+    }[]
+  > {
+    const items_per_page = this.items_per_page
+    const offset = (page - 1) * items_per_page
+
+    const query = await this.transactionRepository.query(`
+        SELECT "transaction".transaction_id, category.category, "transaction".transaction_value, "transaction".transaction_type, "transaction".transaction_date
+        FROM "transaction"
+        JOIN category ON "transaction".category_id = category.category_id
+        WHERE "transaction".user_id = '${user_id}'
+        ORDER BY "transaction".transaction_date DESC
+        LIMIT ${items_per_page} OFFSET ${offset}
+      `)
+
+    return query
   }
 }

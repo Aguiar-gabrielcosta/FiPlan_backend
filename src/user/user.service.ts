@@ -30,11 +30,10 @@ export class UserService {
   }
 
   updateUser(user_id: string, updateUserDto: UpdateUserDto) {
-    const user: User = new User()
-    user.user_id = user_id
-    user.username = updateUserDto.username
-    user.password = updateUserDto.password
-    return this.userRepository.save(user)
+    return this.userRepository.update(user_id, {
+      username: updateUserDto.username,
+      password: updateUserDto.password,
+    })
   }
 
   deleteUser(user_id: string): Promise<{ affected?: number }> {
