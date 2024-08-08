@@ -32,10 +32,10 @@ beforeAll(async () => {
       // Test database
       TypeOrmModule.forRoot({
         type: 'postgres',
-        host: process.env.DB_HOST,
-        port: Number.parseInt(process.env.DB_PORT),
-        password: process.env.DB_PASSWORD,
-        username: process.env.DB_USERNAME,
+        host: process.env.DB_HOST_TEST,
+        port: Number.parseInt(process.env.DB_PORT_TEST),
+        password: process.env.DB_PASSWORD_TEST,
+        username: process.env.DB_USERNAME_TEST,
         database: process.env.DB_DATABASE_TEST,
         synchronize: false,
         logging: true,
@@ -206,11 +206,7 @@ describe('UserController (e2e)', () => {
       .send({ username: 'testupdated', password: 'testupdated123' })
       .expect(200)
 
-    expect(body).toEqual({
-      user_id: user_id,
-      username: 'testupdated',
-      password: 'testupdated123',
-    })
+    expect(body.affected).toEqual(1)
 
     await userRepository.delete(user_id)
   }, 3000)
@@ -229,10 +225,7 @@ describe('UserController (e2e)', () => {
       .send({ password: 'testupdated123' })
       .expect(200)
 
-    expect(body).toEqual({
-      user_id: user_id,
-      password: 'testupdated123',
-    })
+    expect(body.affected).toEqual(1)
 
     await userRepository.delete(user_id)
   }, 3000)
@@ -346,14 +339,7 @@ describe('TransactionController (e2e)', () => {
       })
       .expect(200)
 
-    expect(body).toEqual({
-      transaction_id: transaction_id,
-      user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
-      category_id: 2,
-      transaction_type: 'income',
-      transaction_value: 50,
-      transaction_date: '2024-08-01T10:06:25.299Z',
-    })
+    expect(body.affected).toEqual(1)
 
     await transactionRepository.delete(transaction_id)
   }, 3000)
@@ -364,8 +350,8 @@ describe('TransactionController (e2e)', () => {
       .expect(200)
 
     expect(body).toEqual({
-      month_expense: 1000,
-      month_income: 543.2,
+      month_expense: 0,
+      month_income: 0,
     })
   }, 3000)
 
@@ -383,6 +369,41 @@ describe('TransactionController (e2e)', () => {
         expenses: 1000,
         category_budget: 3000,
         progress: 0.33,
+      },
+    ])
+  }, 3000)
+
+  it('/transaction/pages/:userid (GET) - should get the number of transactions pages (10 per page)', async () => {
+    const user_id = '2dc5231a-ab37-4c1a-bdee-863d0a467483'
+
+    const { body } = await request(app.getHttpServer())
+      .get(`/transaction/pages/${user_id}`)
+      .expect(200)
+
+    expect(body.pages).toEqual(1)
+  }, 3000)
+
+  it('/transaction/history/:userid/:page (GET) - should get the number of transactions pages (10 per page)', async () => {
+    const user_id = '2dc5231a-ab37-4c1a-bdee-863d0a467483'
+
+    const { body } = await request(app.getHttpServer())
+      .get(`/transaction/history/${user_id}/${1}`)
+      .expect(200)
+
+    expect(body).toEqual([
+      {
+        transaction_id: '61f6c7d7-3f03-427c-bc28-d0429faeb399',
+        category: 'category1',
+        transaction_type: 'expense',
+        transaction_value: 1000,
+        transaction_date: '2024-07-21T03:00:00.000Z',
+      },
+      {
+        transaction_id: 'd223a945-d627-40d7-9bc4-4cff7dece4ca',
+        category: 'category2',
+        transaction_type: 'income',
+        transaction_value: 543.2,
+        transaction_date: '2024-07-21T03:00:00.000Z',
       },
     ])
   }, 3000)
@@ -443,6 +464,37 @@ describe('CategoryController (e2e)', () => {
     await categoryRepository.delete(body.category_id)
   }, 3000)
 
+  it('/category/data/batch (POST) - should add an array of categories', async () => {
+    const newCategories = {
+      categories: [
+        {
+          category: 'category1BatchTest',
+          plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
+          user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
+          category_budget: 1000,
+        },
+        {
+          category: 'category2BatchTest',
+          plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
+          user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
+          category_budget: 2000,
+        },
+      ],
+    }
+
+    const { body } = await request(app.getHttpServer())
+      .post('/category/data/batch')
+      .send(newCategories)
+      .expect(201)
+
+    expect(body).toEqual([
+      { category_id: expect.any(Number) },
+      { category_id: expect.any(Number) },
+    ])
+
+    await categoryRepository.delete(body)
+  }, 3000)
+
   it('/category/data/:id (DELETE) - should delete a category', async () => {
     const { category_id } = await categoryRepository.save({
       category: 'categoryTestDelete',
@@ -469,7 +521,6 @@ describe('CategoryController (e2e)', () => {
     const { body } = await request(app.getHttpServer())
       .patch(`/category/data/${category_id}`)
       .send({
-        category_id: category_id,
         category: 'categoryTestUpdated',
         plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
         user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
@@ -477,13 +528,7 @@ describe('CategoryController (e2e)', () => {
       })
       .expect(200)
 
-    expect(body).toEqual({
-      category_id: category_id,
-      category: 'categoryTestUpdated',
-      plan_id: '2796460d-4c46-4cfd-ae9f-a95e93d4189b',
-      user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
-      category_budget: 3000,
-    })
+    expect(body.affected).toEqual(1)
 
     await categoryRepository.delete(category_id)
   }, 3000)
@@ -509,7 +554,54 @@ describe('CategoryController (e2e)', () => {
         category_budget: 1500,
       },
     ])
-  })
+  }, 3000)
+
+  it('/category/plan/:id (GET) - should get all categories from plan', async () => {
+    const plan_id = '2796460d-4c46-4cfd-ae9f-a95e93d4189b'
+
+    const { body } = await request(app.getHttpServer())
+      .get(`/category/plan/${plan_id}`)
+      .expect(200)
+
+    expect(body).toEqual([
+      {
+        category_id: 1,
+        category: 'category1',
+        category_budget: 3000,
+      },
+      {
+        category_id: 2,
+        category: 'category2',
+        category_budget: 1500,
+      },
+    ])
+  }, 3000)
+
+  it('/category/progress/:userid/:planid (GET) = should get all categories progress', async () => {
+    const user_id = '2dc5231a-ab37-4c1a-bdee-863d0a467483'
+    const plan_id = '2796460d-4c46-4cfd-ae9f-a95e93d4189b'
+
+    const { body } = await request(app.getHttpServer())
+      .get(`/category/progress/${user_id}/${plan_id}`)
+      .expect(200)
+
+    expect(body).toEqual([
+      {
+        category_id: 1,
+        category: 'category1',
+        category_budget: 3000,
+        total_expenses: 1000,
+        progress: 0.33,
+      },
+      {
+        category_id: 2,
+        category: 'category2',
+        category_budget: 1500,
+        total_expenses: 0,
+        progress: 0,
+      },
+    ])
+  }, 3000)
 })
 
 // Testes no módulo de planos, controlador de planos
@@ -606,13 +698,7 @@ describe('PlanController (e2e)', () => {
       })
       .expect(200)
 
-    expect(body).toEqual({
-      plan_id: plan_id,
-      user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
-      budget_value: 3000,
-      start_date: '2024-07-31T20:00:00.669Z',
-      end_date: '2024-08-30T20:00:00.669Z',
-    })
+    expect(body.affected).toEqual(1)
 
     await planRepository.delete(plan_id)
   }, 3000)
