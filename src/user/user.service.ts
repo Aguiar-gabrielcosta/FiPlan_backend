@@ -29,6 +29,10 @@ export class UserService {
     return this.userRepository.findOneBy({ user_id })
   }
 
+  getUserByUsername(username: string) {
+    return this.userRepository.findOneBy({ username })
+  }
+
   updateUser(user_id: string, updateUserDto: UpdateUserDto) {
     return this.userRepository.update(user_id, {
       username: updateUserDto.username,
