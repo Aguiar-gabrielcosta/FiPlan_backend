@@ -2,11 +2,12 @@ import { IsNotEmpty, IsString, MinLength } from 'class-validator'
 
 export class CreateUserDto {
   @IsString()
-  @MinLength(2, { message: 'Deve conter pelo menos 2 digitos.' })
   @IsNotEmpty()
+  @MinLength(6, { message: 'Deve conter no mínimo 6 digitos.' })
   username: string
 
+  @IsString()
   @IsNotEmpty()
-  @MinLength(8, { message: 'Deve conter no mínimo 8 digitos.' })
+  @MinLength(6, { message: 'Deve conter no mínimo 6 digitos.' })
   password: string
 }

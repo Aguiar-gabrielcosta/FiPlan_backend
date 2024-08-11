@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  SetMetadata,
 } from '@nestjs/common'
 import { UserService } from './user.service'
 import { CreateUserDto } from './dto/createUser.dto'
@@ -15,6 +16,7 @@ import { UpdateUserDto } from './dto/updateUser.dto'
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @SetMetadata('isPublic', true)
   @Post('data')
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.addUser(createUserDto)

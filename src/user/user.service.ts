@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable } from '@nestjs/common'
 import { CreateUserDto } from './dto/createUser.dto'
 import { UpdateUserDto } from './dto/updateUser.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from './entities/user.entity'
 import { randomUUID } from 'crypto'
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UserService {
@@ -13,10 +14,18 @@ export class UserService {
   ) {}
 
   async addUser(createUserDto: CreateUserDto): Promise<{ user_id: string }> {
+    const duplicate = await this.userRepository.existsBy({
+      username: createUserDto.username,
+    })
+
+    if (duplicate) {
+      throw new ForbiddenException()
+    }
+
     const user: User = new User()
     user.user_id = randomUUID()
     user.username = createUserDto.username
-    user.password = createUserDto.password
+    user.password = await bcrypt.hash(createUserDto.password, 10)
     await this.userRepository.save(user)
     return { user_id: user.user_id }
   }
