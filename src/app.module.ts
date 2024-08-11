@@ -7,6 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { UserModule } from './user/user.module'
 import { PlanModule } from './plan/plan.module'
 import { types } from 'pg'
+import { AuthModule } from './auth/auth.module'
+import { AuthGuard } from './auth/auth.guard'
 
 // Parsing para o tipo NUMERIC
 types.setTypeParser(1700, (val: string) => parseFloat(val))
@@ -30,8 +32,9 @@ types.setTypeParser(1700, (val: string) => parseFloat(val))
     TransactionModule,
     UserModule,
     PlanModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, { provide: 'APP_GUARD', useClass: AuthGuard }],
 })
 export class AppModule {}
