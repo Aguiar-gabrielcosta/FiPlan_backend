@@ -39,7 +39,7 @@ export class UserService {
   async getUserById(user_id: string) {
     const user = await this.userRepository.findOneBy({ user_id })
 
-    if (!user.user_id) {
+    if (!user) {
       return {}
     }
 
