@@ -31,21 +31,29 @@ export class UserService {
   }
 
   getAllUsers(): Promise<User[]> {
-    return this.userRepository.find()
+    return this.userRepository.find({
+      select: { user_id: true, username: true },
+    })
   }
 
-  getUserById(user_id: string) {
-    return this.userRepository.findOneBy({ user_id })
+  async getUserById(user_id: string) {
+    const user = await this.userRepository.findOneBy({ user_id })
+
+    if (!user.user_id) {
+      return {}
+    }
+
+    return { user_id: user.user_id, username: user.username }
   }
 
   getUserByUsername(username: string) {
     return this.userRepository.findOneBy({ username })
   }
 
-  updateUser(user_id: string, updateUserDto: UpdateUserDto) {
+  async updateUser(user_id: string, updateUserDto: UpdateUserDto) {
     return this.userRepository.update(user_id, {
       username: updateUserDto.username,
-      password: updateUserDto.password,
+      password: await bcrypt.hash(updateUserDto.password, 10),
     })
   }
 

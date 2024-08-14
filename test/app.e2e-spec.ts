@@ -135,12 +135,10 @@ describe('UserController (e2e)', () => {
       {
         user_id: '2dc5231a-ab37-4c1a-bdee-863d0a467483',
         username: 'testuser1',
-        password: 'testpw1',
       },
       {
         user_id: '3dc5231a-ab37-4c1a-bdee-863d0a467483',
         username: 'testuser2',
-        password: 'testpw2',
       },
     ])
   }, 3000)
@@ -153,7 +151,6 @@ describe('UserController (e2e)', () => {
     expect(body).toEqual({
       user_id: '3dc5231a-ab37-4c1a-bdee-863d0a467483',
       username: 'testuser2',
-      password: 'testpw2',
     })
   }, 3000)
 
